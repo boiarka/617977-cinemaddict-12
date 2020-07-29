@@ -1,4 +1,4 @@
-"use srtict";
+"use strict";
 
 const FILM_COUNT = 5;
 
@@ -125,10 +125,10 @@ const filmsElement = document.querySelector(`.films`);
 render(filmsElement, topRatedFilmsTemplate(), `beforeend`);
 render(filmsElement, mostCommentedFilmsTemplate(), `beforeend`);
 
-const topRatedFilmsElement = document.getElementById("top-rated");
+const topRatedFilmsElement = document.getElementById(`top-rated`);
 const topRatedFilmsContainer = topRatedFilmsElement.querySelector(`.films-list__container`);
 
-const mostCommentedFilmsElement = document.getElementById("most-commented");
+const mostCommentedFilmsElement = document.getElementById(`most-commented`);
 const mostCommentedFilmsContainer = mostCommentedFilmsElement.querySelector(`.films-list__container`);
 
 
