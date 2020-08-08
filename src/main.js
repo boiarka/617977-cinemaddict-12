@@ -47,7 +47,6 @@ const FILM_COUNT_PER_STEP = 5;
 const EXTRA_FILM_COUNT = 2;
 
 const films = new Array(FILM_COUNT).fill().map(generateFilms);
-console.log(films);
 
 function render(container, template, place) {
   container.insertAdjacentHTML(place, template);
@@ -57,7 +56,7 @@ const headerElement = document.querySelector(`.header`);
 const mainElement = document.querySelector(`.main`);
 
 render(headerElement, userProfileTemplae(), `beforeend`);
-render(mainElement, mainNavTemplate(), `beforeend`);
+render(mainElement, mainNavTemplate(films), `beforeend`);
 render(mainElement, sortTemplate(), `beforeend`);
 render(mainElement, filmsSectionTemplate(), `beforeend`);
 

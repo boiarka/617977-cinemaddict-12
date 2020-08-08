@@ -104,5 +104,8 @@ export const generateFilms = () => {
     poster,
     description,
     comments,
+    isWatchlist: getRandomInteger(0, 1),
+    isWatched: getRandomInteger(0, 1),
+    isFavorites: getRandomInteger(0, 1),
   };
 };
