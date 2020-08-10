@@ -1,5 +1,5 @@
-export const filmsStatisticTemplate = () => {
+export const filmsStatisticTemplate = (filmsCount) => {
   return (
-    `<p>130 291 movies inside</p>`
+    `<p>${filmsCount} movies inside</p>`
   );
 };
