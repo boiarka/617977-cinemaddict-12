@@ -2,20 +2,19 @@ import {
   createElement
 } from "../utils.js";
 
-const filmsStatisticTemplate = (filmsCount) => {
+const filmsContainerTemplate = () => {
   return (
-    `<p>${filmsCount} movies inside</p>`
+    `<div class="films-list__container"></div>`
   );
 };
 
-export default class FilmsStat {
-  constructor(count) {
-    this._count = count;
+export default class FilmsContainer {
+  constructor() {
     this._element = null;
   }
 
   getTemplate() {
-    return filmsStatisticTemplate(this._count);
+    return filmsContainerTemplate();
   }
 
   getElement() {

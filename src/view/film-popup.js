@@ -1,3 +1,7 @@
+import {
+  createElement
+} from "../utils.js";
+
 const createCommentTemplate = (comment) => {
   const {
     name,
@@ -23,7 +27,7 @@ const createCommentTemplate = (comment) => {
 };
 
 
-export const filmPopupTemplate = (film) => {
+const filmPopupTemplate = (film) => {
   const {
     name,
     poster,
@@ -156,3 +160,27 @@ export const filmPopupTemplate = (film) => {
   </form>
 </section>`;
 };
+
+
+export default class FilmPopup {
+  constructor(film) {
+    this._film = film;
+    this._element = null;
+  }
+
+  getTemplate() {
+    return filmPopupTemplate(this._film);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}

@@ -1,19 +1,71 @@
-const filmsToFilterMap = {
-  watchlist: (films) => films.filter((film) => film.isWatchlist).length,
-  history: (films) => films.filter((film) => film.isWatched).length,
-  favorites: (films) => films.filter((film) => film.isFavorites).length,
+import {
+  createElement
+} from "../utils.js";
+
+const FILTERS = {
+  ALL: `all`,
+  WATCHLIST: `watchlist`,
+  HISTORY: `history`,
+  FAVORITES: `favorites`
 };
 
-export const mainNavTemplate = (films) => {
+const FILTERS_LABELS = {
+  [FILTERS.ALL]: `All movies`,
+  [FILTERS.WATCHLIST]: `Watchlist`,
+  [FILTERS.HISTORY]: `History`,
+  [FILTERS.FAVORITES]: `Favorites`,
+};
+
+
+const createNavItemTemplate = (filter, isActive) => {
+  const {
+    name,
+    count
+  } = filter;
+
+  return `<a 
+  href="#${name}" 
+  class="main-navigation__item ${isActive ? `main-navigation__item--active` : ``}">
+  ${FILTERS_LABELS[name]}
+  ${name === FILTERS.ALL ? `` : `<span class="main-navigation__item-count">${count}</span>`}
+  </a>`;
+};
+
+const mainNavTemplate = (filterItems) => {
+  const navItemsTemplate = filterItems
+    .map((filter, index) => createNavItemTemplate(filter, index === 0))
+    .join(``);
+
   return (
     `<nav class="main-navigation">
           <div class="main-navigation__items">
-            <a href="#all" class="main-navigation__item main-navigation__item--active">All movies</a>
-            <a href="#watchlist" class="main-navigation__item">Watchlist <span class="main-navigation__item-count">${filmsToFilterMap.watchlist(films)}</span></a>
-            <a href="#history" class="main-navigation__item">History <span class="main-navigation__item-count">${filmsToFilterMap.history(films)}</span></a>
-            <a href="#favorites" class="main-navigation__item">Favorites <span class="main-navigation__item-count">${filmsToFilterMap.favorites(films)}</span></a>
+            ${navItemsTemplate}
           </div>
           <a href="#stats" class="main-navigation__additional">Stats</a>
         </nav>`
   );
 };
+
+
+export default class SiteNav {
+  constructor(filters) {
+    this._filters = filters;
+    this._element = null;
+  }
+
+  getTemplate() {
+    return mainNavTemplate(this._filters);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}
