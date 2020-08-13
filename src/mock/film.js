@@ -1,4 +1,37 @@
 const COMMENTS_COUNT = 5;
+const MAX_DAYS_GAP = 7;
+
+const FILM_NAMES = [
+  `Побег из Шоушенка`,
+  `Криминальное чтиво`,
+  `Бойцовский клуб`,
+  `Форрест Гамп`,
+  `Жизнь прекрасна`,
+  `Спасти рядового Райана`
+];
+const POSTERS = [
+  `made-for-each-other.png`,
+  `popeye-meets-sinbad.png`,
+  `sagebrush-trail.jpg`,
+  `santa-claus-conquers-the-martians.jpg`,
+  `the-dance-of-life.jpg`,
+  `the-man-with-the-golden-arm.jpg`
+];
+const DESCRIPTIONS = [
+  `Lorem ipsum dolor sit amet, consectetur adipiscing elit.`,
+  `Cras aliquet varius magna, non porta ligula feugiat eget.`,
+  `Fusce tristique felis at fermentum pharetra. Aliquam id orci ut lectus varius viverra.`,
+  `Nullam nunc ex, convallis sed finibus eget, sollicitudin eget ante.`,
+  `Phasellus eros mauris, condimentum sed nibh vitae, sodales efficitur ipsum. Sed blandit, eros vel aliquam faucibus, purus ex euismod diam, eu luctus nunc ante ut dui.`
+];
+const COMMENTS_TEXT = [
+  `Никакого кемпинга,я тебя понял.`,
+  `Илюха,  говори даты, хотя-бы в начале видоса.. так интереснее будет`,
+  `Топ! Уровень фильма — картинка, атмосфера оч круто!`,
+  `Илья уже не тот, Илья стал лучше.`,
+  `Атмосфера как в старые добрые...`
+];
+const COMMENT_USERS = [`Vlad`, `Andrew`, `Yurii`, `Oleg`, `Olga`];
 
 const getRandomInteger = (a = 0, b = 1) => {
   const lower = Math.ceil(Math.min(a, b));
@@ -8,43 +41,20 @@ const getRandomInteger = (a = 0, b = 1) => {
 };
 
 const generateNames = () => {
-  const names = [
-    `Побег из Шоушенка`,
-    `Криминальное чтиво`,
-    `Бойцовский клуб`,
-    `Форрест Гамп`,
-    `Жизнь прекрасна`,
-    `Спасти рядового Райана`
-  ];
-  const randomIndex = getRandomInteger(0, names.length - 1);
-  return names[randomIndex];
+  const randomIndex = getRandomInteger(0, FILM_NAMES.length - 1);
+  return FILM_NAMES[randomIndex];
 };
 
 const generatePoster = () => {
-  const posters = [
-    `made-for-each-other.png`,
-    `popeye-meets-sinbad.png`,
-    `sagebrush-trail.jpg`,
-    `santa-claus-conquers-the-martians.jpg`,
-    `the-dance-of-life.jpg`,
-    `the-man-with-the-golden-arm.jpg`
-  ];
-  const randomIndex = getRandomInteger(0, posters.length - 1);
-  return posters[randomIndex];
+  const randomIndex = getRandomInteger(0, POSTERS.length - 1);
+  return POSTERS[randomIndex];
 };
 
 const generateDescriptions = () => {
-  const descriptions = [
-    `Lorem ipsum dolor sit amet, consectetur adipiscing elit.`,
-    `Cras aliquet varius magna, non porta ligula feugiat eget.`,
-    `Fusce tristique felis at fermentum pharetra. Aliquam id orci ut lectus varius viverra.`,
-    `Nullam nunc ex, convallis sed finibus eget, sollicitudin eget ante.`,
-    `Phasellus eros mauris, condimentum sed nibh vitae, sodales efficitur ipsum. Sed blandit, eros vel aliquam faucibus, purus ex euismod diam, eu luctus nunc ante ut dui.`
-  ];
-  const randomIndex = getRandomInteger(0, descriptions.length - 1);
+  const randomIndex = getRandomInteger(0, DESCRIPTIONS.length - 1);
   let description = ``;
   for (let i = 0; i <= randomIndex; i++) {
-    description += descriptions[i];
+    description += DESCRIPTIONS[i];
   }
 
   return description;
@@ -57,8 +67,7 @@ const generateDate = () => {
     return null;
   }
 
-  const maxDaysGap = 7;
-  const daysGap = getRandomInteger(-maxDaysGap, maxDaysGap);
+  const daysGap = getRandomInteger(-MAX_DAYS_GAP, MAX_DAYS_GAP);
   const currentDate = new Date();
 
   currentDate.setHours(23, 59, 59, 999);
@@ -69,23 +78,14 @@ const generateDate = () => {
 };
 
 const generateComments = () => {
-  const texts = [
-    `Никакого кемпинга,я тебя понял.`,
-    `Илюха,  говори даты, хотя-бы в начале видоса.. так интереснее будет`,
-    `Топ! Уровень фильма — картинка, атмосфера оч круто!`,
-    `Илья уже не тот, Илья стал лучше.`,
-    `Атмосфера как в старые добрые...`
-  ];
-
-  const names = [`Vlad`, `Andrew`, `Yurii`, `Oleg`, `Olga`];
   const date = generateDate();
 
-  const randomIndex = getRandomInteger(0, texts.length - 1);
+  const randomIndex = getRandomInteger(0, COMMENTS_TEXT.length - 1);
 
   const comment = {
-    name: names[randomIndex],
+    name: COMMENT_USERS[randomIndex],
     date,
-    text: texts[randomIndex],
+    text: COMMENTS_TEXT[randomIndex],
   };
 
   return comment;
