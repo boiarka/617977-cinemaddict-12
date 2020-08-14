@@ -14,6 +14,7 @@ import TopRatedView from "./view/top-rated.js";
 import MostCommentedView from "./view/most-commented.js";
 
 import FilmsStatView from "./view/films-stat.js";
+import NoFilmsView from "./view/no-films.js";
 
 import {
   generateFilms
@@ -45,11 +46,21 @@ const renderFilm = (filmsListElement, film) => {
 
   const openPopup = () => {
     render(mainElement, filmPopupComponent.getElement(), RenderPosition.BEFOREEND);
+    document.addEventListener(`keydown`, onEscKeyDown);
   };
 
   const closePopup = () => {
     filmPopupComponent.getElement().remove();
     filmPopupComponent.removeElement();
+    document.removeEventListener(`keydown`, onEscKeyDown);
+  };
+
+  const onEscKeyDown = (evt) => {
+    if (evt.key === `Escape` || evt.key === `Esc`) {
+      evt.preventDefault();
+      closePopup();
+      document.removeEventListener(`keydown`, onEscKeyDown);
+    }
   };
 
   // обработчики карточки фильма
@@ -72,63 +83,73 @@ const renderFilm = (filmsListElement, film) => {
   render(filmsListElement, filmComponent.getElement(), RenderPosition.BEFOREEND);
 };
 
+const renderFilmSection = (mainSection, allFilms) => {
+  const filmsSectionComponent = new FilmSectionWiew();
+  render(mainSection, filmsSectionComponent.getElement(), RenderPosition.BEFOREEND);
+
+  const filmsListComponent = new FilmsListWiew();
+  render(filmsSectionComponent.getElement(), filmsListComponent.getElement(), RenderPosition.BEFOREEND);
+
+  const filmsContainerComponent = new FilmsContainer();
+  render(filmsListComponent.getElement(), filmsContainerComponent.getElement(), RenderPosition.BEFOREEND);
+
+  // если нет фильмов
+  if (allFilms.length === 0) {
+    render(filmsListComponent.getElement(), new NoFilmsView().getElement(), RenderPosition.AFTERBEGIN);
+    return;
+  }
+
+  for (let i = 0; i < Math.min(allFilms.length, FILM_COUNT_PER_STEP); i++) {
+    renderFilm(filmsContainerComponent.getElement(), allFilms[i]);
+  }
+
+  if (allFilms.length > FILM_COUNT_PER_STEP) {
+    let renderedFilmCount = FILM_COUNT_PER_STEP;
+
+    const loadMoreButton = new LoadMoreView();
+    render(filmsListComponent.getElement(), loadMoreButton.getElement(), `beforeend`);
+
+    loadMoreButton.getElement().addEventListener(`click`, (evt) => {
+      evt.preventDefault();
+      allFilms
+        .slice(renderedFilmCount, renderedFilmCount + FILM_COUNT_PER_STEP)
+        .forEach((film) => renderFilm(filmsContainerComponent.getElement(), film));
+
+      renderedFilmCount += FILM_COUNT_PER_STEP;
+
+      if (renderedFilmCount >= allFilms.length) {
+        loadMoreButton.getElement().remove();
+        loadMoreButton.removeElement();
+      }
+    });
+  }
+
+  // top rated films
+  const topRatedComponent = new TopRatedView();
+  render(filmsSectionComponent.getElement(), topRatedComponent.getElement(), `beforeend`);
+  const topRatedFilmsContainer = new FilmsContainer();
+  render(topRatedComponent.getElement(), topRatedFilmsContainer.getElement(), `beforeend`);
+
+  for (let i = 0; i < EXTRA_FILM_COUNT; i++) {
+    renderFilm(topRatedFilmsContainer.getElement(), films[i]);
+  }
+
+  // most commented films
+  const mostCommentedComponent = new MostCommentedView();
+  render(filmsSectionComponent.getElement(), mostCommentedComponent.getElement(), `beforeend`);
+  const mostCommentedFilmsContainer = new FilmsContainer();
+  render(mostCommentedComponent.getElement(), mostCommentedFilmsContainer.getElement(), `beforeend`);
+
+  for (let i = 0; i < EXTRA_FILM_COUNT; i++) {
+    renderFilm(mostCommentedFilmsContainer.getElement(), films[i]);
+  }
+};
+
 render(headerElement, new UserProfileView().getElement(), RenderPosition.BEFOREEND);
 render(mainElement, new SiteNavView(filters).getElement(), RenderPosition.BEFOREEND);
 render(mainElement, new SortView().getElement(), RenderPosition.BEFOREEND);
 
-const filmsSectionComponent = new FilmSectionWiew();
-render(mainElement, filmsSectionComponent.getElement(), RenderPosition.BEFOREEND);
 
-const filmsListComponent = new FilmsListWiew();
-render(filmsSectionComponent.getElement(), filmsListComponent.getElement(), RenderPosition.BEFOREEND);
-
-const filmsContainerComponent = new FilmsContainer();
-render(filmsListComponent.getElement(), filmsContainerComponent.getElement(), RenderPosition.BEFOREEND);
-
-for (let i = 0; i < Math.min(films.length, FILM_COUNT_PER_STEP); i++) {
-  renderFilm(filmsContainerComponent.getElement(), films[i]);
-}
-
-if (films.length > FILM_COUNT_PER_STEP) {
-  let renderedFilmCount = FILM_COUNT_PER_STEP;
-
-  const loadMoreButton = new LoadMoreView();
-  render(filmsListComponent.getElement(), loadMoreButton.getElement(), `beforeend`);
-
-  loadMoreButton.getElement().addEventListener(`click`, (evt) => {
-    evt.preventDefault();
-    films
-      .slice(renderedFilmCount, renderedFilmCount + FILM_COUNT_PER_STEP)
-      .forEach((film) => renderFilm(filmsContainerComponent.getElement(), film));
-
-    renderedFilmCount += FILM_COUNT_PER_STEP;
-
-    if (renderedFilmCount >= films.length) {
-      loadMoreButton.getElement().remove();
-      loadMoreButton.removeElement();
-    }
-  });
-}
-
-// top rated films
-const topRatedComponent = new TopRatedView();
-render(filmsSectionComponent.getElement(), topRatedComponent.getElement(), `beforeend`);
-const topRatedFilmsContainer = new FilmsContainer();
-render(topRatedComponent.getElement(), topRatedFilmsContainer.getElement(), `beforeend`);
-
-for (let i = 0; i < EXTRA_FILM_COUNT; i++) {
-  renderFilm(topRatedFilmsContainer.getElement(), films[i]);
-}
-
-// most commented films
-const mostCommentedComponent = new MostCommentedView();
-render(filmsSectionComponent.getElement(), mostCommentedComponent.getElement(), `beforeend`);
-const mostCommentedFilmsContainer = new FilmsContainer();
-render(mostCommentedComponent.getElement(), mostCommentedFilmsContainer.getElement(), `beforeend`);
-
-for (let i = 0; i < EXTRA_FILM_COUNT; i++) {
-  renderFilm(mostCommentedFilmsContainer.getElement(), films[i]);
-}
-
+renderFilmSection(mainElement, films);
 const footerStatisticContainer = document.querySelector(`.footer__statistics`);
 render(footerStatisticContainer, new FilmsStatView(FILM_COUNT).getElement(), `beforeend`);
