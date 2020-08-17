@@ -1,6 +1,4 @@
-import {
-  createElement
-} from "../utils.js";
+import AbstractView from "./abstract.js";
 
 const filmsStatisticTemplate = (filmsCount) => {
   return (
@@ -8,25 +6,13 @@ const filmsStatisticTemplate = (filmsCount) => {
   );
 };
 
-export default class FilmsStat {
+export default class FilmsStat extends AbstractView {
   constructor(count) {
+    super();
     this._count = count;
-    this._element = null;
   }
 
   getTemplate() {
     return filmsStatisticTemplate(this._count);
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }
