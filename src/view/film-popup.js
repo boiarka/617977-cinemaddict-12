@@ -1,6 +1,4 @@
-import {
-  createElement
-} from "../utils.js";
+import AbstractView from "./abstract.js";
 
 const createCommentTemplate = (comment) => {
   const {
@@ -162,25 +160,25 @@ const filmPopupTemplate = (film) => {
 };
 
 
-export default class FilmPopup {
+export default class FilmPopup extends AbstractView {
   constructor(film) {
+    super();
+
     this._film = film;
-    this._element = null;
+    this._popupCloseClickHandler = this._popupCloseClickHandler.bind(this);
   }
 
   getTemplate() {
     return filmPopupTemplate(this._film);
   }
 
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
+  _popupCloseClickHandler(evt) {
+    evt.preventDefault();
+    this._callback.popupCloseClick();
   }
 
-  removeElement() {
-    this._element = null;
+  setPopupCloseClickHandler(callback) {
+    this._callback.popupCloseClick = callback;
+    this.getElement().querySelector(`.film-details__close-btn`).addEventListener(`click`, this._popupCloseClickHandler);
   }
 }
