@@ -22,7 +22,7 @@ import {
   RenderPosition
 } from "../utils/render.js";
 
-export default class FilmSection {
+export default class MovieList {
   constructor(mainSection) {
     this._mainSection = mainSection;
     this._renderedFilmCount = FILM_COUNT_PER_STEP;

@@ -3,7 +3,7 @@ import SiteNavView from "./view/site-nav.js";
 import SortView from "./view/sort.js";
 import FilmsStatView from "./view/films-stat.js";
 
-import FilmSectionPresenter from "./presenter/film-section.js";
+import MovieListPresenter from "./presenter/movies-list.js";
 
 import {
   generateFilms
@@ -29,7 +29,7 @@ const filters = generateFilters(films);
 const headerElement = document.querySelector(`.header`);
 const mainElement = document.querySelector(`.main`);
 
-const filmSectionPresenter = new FilmSectionPresenter(mainElement);
+const filmSectionPresenter = new MovieListPresenter(mainElement);
 
 render(headerElement, new UserProfileView(), RenderPosition.BEFOREEND);
 render(mainElement, new SiteNavView(filters), RenderPosition.BEFOREEND);
