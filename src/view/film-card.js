@@ -5,6 +5,8 @@ const filmCardTemplate = (film = {}) => {
   const {
     name,
     poster,
+    date,
+    rating,
     description,
     comments
   } = film;
@@ -12,9 +14,9 @@ const filmCardTemplate = (film = {}) => {
   return (
     `<article class="film-card">
           <h3 class="film-card__title">${name}</h3>
-          <p class="film-card__rating">8.3</p>
+          <p class="film-card__rating">${rating}</p>
           <p class="film-card__info">
-            <span class="film-card__year">1929</span>
+            <span class="film-card__year">${date}</span>
             <span class="film-card__duration">1h 55m</span>
             <span class="film-card__genre">Musical</span>
           </p>

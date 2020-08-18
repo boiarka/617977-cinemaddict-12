@@ -102,6 +102,8 @@ export const generateFilms = () => {
   return {
     name,
     poster,
+    date: getRandomInteger(1960, 2020),
+    rating: getRandomInteger(0, 10),
     description,
     comments,
     isWatchlist: getRandomInteger(0, 1),
