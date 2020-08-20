@@ -1,4 +1,4 @@
-const COMMENTS_COUNT = 5;
+const COMMENTS_COUNT = 15;
 const MAX_DAYS_GAP = 7;
 
 const FILM_NAMES = [
@@ -32,6 +32,8 @@ const COMMENTS_TEXT = [
   `Атмосфера как в старые добрые...`
 ];
 const COMMENT_USERS = [`Vlad`, `Andrew`, `Yurii`, `Oleg`, `Olga`];
+
+const generateId = () => Date.now() + parseInt(Math.random() * 10000, 10);
 
 const getRandomInteger = (a = 0, b = 1) => {
   const lower = Math.ceil(Math.min(a, b));
@@ -100,6 +102,7 @@ export const generateFilms = () => {
   const comments = new Array(randomIndex).fill().map(generateComments);
 
   return {
+    id: generateId(),
     name,
     poster,
     date: getRandomInteger(1960, 2020),
