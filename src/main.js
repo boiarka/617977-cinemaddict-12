@@ -25,8 +25,9 @@ const filters = generateFilters(films);
 
 const headerElement = document.querySelector(`.header`);
 const mainElement = document.querySelector(`.main`);
+const bodyElement = document.querySelector(`body`);
 
-const filmSectionPresenter = new MovieListPresenter(mainElement);
+const filmSectionPresenter = new MovieListPresenter(mainElement, bodyElement);
 
 render(headerElement, new UserProfileView(), RenderPosition.BEFOREEND);
 render(mainElement, new SiteNavView(filters), RenderPosition.BEFOREEND);
