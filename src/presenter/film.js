@@ -8,6 +8,11 @@ import {
   RenderPosition
 } from "../utils/render.js";
 
+import {
+  UserAction,
+  UpdateType
+} from "../const.js";
+
 const Mode = {
   DEFAULT: `DEFAULT`,
   POPUP: `POPUP`
@@ -95,6 +100,7 @@ export default class Film {
     this._filmPopupComponent.setWatchListClickHandler(this._handleWatchListClick);
     this._filmPopupComponent.setWatchedClickHandler(this._handleWatchedClick);
     this._filmPopupComponent.setFavoritesClickHandler(this._handleFavoritesClick);
+
     document.addEventListener(`keydown`, this._escKeyDownHandler);
     document.addEventListener(`keydown`, this._ctrEnterDownHandler);
 
@@ -120,14 +126,25 @@ export default class Film {
   }
 
   _ctrEnterDownHandler(evt) {
-    if (evt.key === `Control` || evt.key === `Enter`) {
+    if ((evt.metaKey || evt.ctrlKey) && evt.keyCode === 13) {
       evt.preventDefault();
       this._handleAddComment();
     }
   }
 
   _handleAddComment() {
-    this._filmPopupComponent.setAddCommentHandler();
+
+    const commentEmoji = this._filmPopupComponent.getElement().querySelector(`.film-details__add-emoji-label`);
+    const commentText = this._filmPopupComponent.getElement().querySelector(`.film-details__comment-input`);
+
+    console.log(commentEmoji);
+    this._film.comments.push({
+      name: "NEWNAME",
+      date: null,
+      text: commentText.value
+    });
+
+    this._changeData(UserAction.UPDATE_FILM, UpdateType.MINOR, this._film);
   }
 
   _handleTitleClick() {
@@ -147,19 +164,19 @@ export default class Film {
   }
 
   _handleWatchListClick() {
-    this._changeData(Object.assign({}, this._film, {
+    this._changeData(UserAction.UPDATE_FILM, UpdateType.MINOR, Object.assign({}, this._film, {
       isWatchlist: !this._film.isWatchlist
     }));
   }
 
   _handleWatchedClick() {
-    this._changeData(Object.assign({}, this._film, {
+    this._changeData(UserAction.UPDATE_FILM, UpdateType.MINOR, Object.assign({}, this._film, {
       isWatched: !this._film.isWatched
     }));
   }
 
   _handleFavoritesClick() {
-    this._changeData(Object.assign({}, this._film, {
+    this._changeData(UserAction.UPDATE_FILM, UpdateType.MINOR, Object.assign({}, this._film, {
       isFavorites: !this._film.isFavorites
     }));
   }

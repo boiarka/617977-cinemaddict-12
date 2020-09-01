@@ -1,37 +1,36 @@
 import AbstractView from "./abstract.js";
+import {
+  FilterType
+} from "../const.js";
 
-const FILTERS = {
-  ALL: `all`,
-  WATCHLIST: `watchlist`,
-  HISTORY: `history`,
-  FAVORITES: `favorites`
-};
 
 const FILTERS_LABELS = {
-  [FILTERS.ALL]: `All movies`,
-  [FILTERS.WATCHLIST]: `Watchlist`,
-  [FILTERS.HISTORY]: `History`,
-  [FILTERS.FAVORITES]: `Favorites`,
+  [FilterType.ALL]: `All movies`,
+  [FilterType.WATCHLIST]: `Watchlist`,
+  [FilterType.HISTORY]: `History`,
+  [FilterType.FAVORITES]: `Favorites`,
 };
 
 
-const createNavItemTemplate = (filter, isActive) => {
+const createNavItemTemplate = (filter, currentFilterType) => {
   const {
+    type,
     name,
     count
   } = filter;
 
   return `<a 
   href="#${name}" 
-  class="main-navigation__item ${isActive ? `main-navigation__item--active` : ``}">
-  ${FILTERS_LABELS[name]}
-  ${name === FILTERS.ALL ? `` : `<span class="main-navigation__item-count">${count}</span>`}
+  class="main-navigation__item ${type === currentFilterType ? `main-navigation__item--active` : ``}"
+  data-filter-type="${type}">
+  ${FILTERS_LABELS[type]}
+  ${name === FilterType.ALL ? `` : `<span class="main-navigation__item-count">${count}</span>`}
   </a>`;
 };
 
-const mainNavTemplate = (filterItems) => {
+const mainNavTemplate = (filterItems, currentFilterType) => {
   const navItemsTemplate = filterItems
-    .map((filter, index) => createNavItemTemplate(filter, index === 0))
+    .map((filter) => createNavItemTemplate(filter, currentFilterType))
     .join(``);
 
   return (
@@ -46,14 +45,30 @@ const mainNavTemplate = (filterItems) => {
 
 
 export default class SiteNav extends AbstractView {
-  constructor(filters) {
+  constructor(filters, currentFilterType) {
     super();
 
     this._filters = filters;
-    this._element = null;
+    this._currentFilter = currentFilterType;
+
+    this._filterTypeChangeHandler = this._filterTypeChangeHandler.bind(this);
   }
 
   getTemplate() {
-    return mainNavTemplate(this._filters);
+    return mainNavTemplate(this._filters, this._currentFilter);
+  }
+
+  _filterTypeChangeHandler(evt) {
+    if (evt.target.tagName !== `A`) {
+      return;
+    }
+
+    evt.preventDefault();
+    this._callback.filterTypeChange(evt.target.dataset.filterType);
+  }
+
+  setFilterTypeChangeHandler(callback) {
+    this._callback.filterTypeChange = callback;
+    this.getElement().addEventListener(`click`, this._filterTypeChangeHandler);
   }
 }

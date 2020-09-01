@@ -88,6 +88,7 @@ const generateComments = () => {
     name: COMMENT_USERS[randomIndex],
     date,
     text: COMMENTS_TEXT[randomIndex],
+    emoji: `puke`,
   };
 
   return comment;
