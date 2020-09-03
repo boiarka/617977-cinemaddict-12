@@ -79,12 +79,14 @@ const generateDate = () => {
   return new Date(currentDate);
 };
 
-const generateComments = () => {
+const generateComment = (filmId) => {
   const date = generateDate();
 
   const randomIndex = getRandomInteger(0, COMMENTS_TEXT.length - 1);
 
   const comment = {
+    id: generateId(),
+    filmId,
     name: COMMENT_USERS[randomIndex],
     date,
     text: COMMENTS_TEXT[randomIndex],
@@ -94,13 +96,20 @@ const generateComments = () => {
   return comment;
 };
 
+
+export const generateComments = (id) => {
+  const randomIndex = getRandomInteger(1, COMMENTS_COUNT - 1);
+  const comments = [];
+  for (let i = 0; i < randomIndex; i++) {
+    comments.push(generateComment(id));
+  }
+  return comments;
+};
+
 export const generateFilms = () => {
   const name = generateNames();
   const poster = generatePoster();
   const description = generateDescriptions();
-
-  const randomIndex = getRandomInteger(0, COMMENTS_COUNT - 1);
-  const comments = new Array(randomIndex).fill().map(generateComments);
 
   return {
     id: generateId(),
@@ -109,7 +118,6 @@ export const generateFilms = () => {
     date: getRandomInteger(1960, 2020),
     rating: getRandomInteger(0, 10),
     description,
-    comments,
     isWatchlist: getRandomInteger(0, 1),
     isWatched: getRandomInteger(0, 1),
     isFavorites: getRandomInteger(0, 1),

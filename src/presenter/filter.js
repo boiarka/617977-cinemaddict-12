@@ -67,7 +67,8 @@ export default class Filter {
   _getFilters() {
     const films = this._filmsModel.getFilms();
 
-    return [{
+    return [
+      {
         type: FilterType.ALL,
         name: `All`,
         count: filter[FilterType.ALL](films).length

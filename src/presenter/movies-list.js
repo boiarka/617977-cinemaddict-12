@@ -13,7 +13,6 @@ import NoFilmsView from "../view/no-films.js";
 import FilmPresenter from "./film.js";
 
 const FILM_COUNT_PER_STEP = 5;
-const EXTRA_FILM_COUNT = 2;
 
 
 import {
@@ -24,8 +23,7 @@ import {
 
 import {
   sortByDate,
-  sortByRating,
-  sortByComments
+  sortByRating
 } from "../utils/film.js";
 
 import {
@@ -39,8 +37,9 @@ import {
 } from "../utils/filter.js";
 
 export default class MovieList {
-  constructor(mainSection, bodyElement, filmsModel, filterModel) {
+  constructor(mainSection, bodyElement, filmsModel, filterModel, commentsModel) {
     this._filmsModel = filmsModel;
+    this._commentsModel = commentsModel;
     this._filterModel = filterModel;
 
     this._mainSection = mainSection;
@@ -126,11 +125,6 @@ export default class MovieList {
     switch (updateType) {
       case UpdateType.MINOR:
         this._filmPresenter[data.id].init(data);
-        this._clearList();
-        this._renderList({
-          resetRenderedFilmCount: true,
-          resetSortType: true
-        });
         break;
       case UpdateType.MAJOR:
         this._clearList();
@@ -154,7 +148,8 @@ export default class MovieList {
   }
 
   _renderFilm(film) {
-    const filmPresenter = new FilmPresenter(this._filmsContainerComponent, this._handleViewAction, this._bodyElement, this._handleModeChange);
+    const filmPresenter = new FilmPresenter(this._filmsContainerComponent, this._handleViewAction, this._bodyElement, this._handleModeChange, this._commentsModel);
+
     filmPresenter.init(film);
     this._filmPresenter[film.id] = filmPresenter;
   }
@@ -257,7 +252,5 @@ export default class MovieList {
     if (resetSortType) {
       this._currentSortType = SortType.DEFAULT;
     }
-
-    console.log(this._renderedFilmCount);
   }
 }

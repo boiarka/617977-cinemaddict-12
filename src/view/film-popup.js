@@ -59,12 +59,11 @@ const createAddCommentTemplate = () => {
 };
 
 
-const filmPopupTemplate = (film) => {
+const filmPopupTemplate = (film, comments) => {
   const {
     name,
     poster,
     description,
-    comments,
     isWatchlist,
     isWatched,
     isFavorites
@@ -174,10 +173,11 @@ const filmPopupTemplate = (film) => {
 
 
 export default class FilmPopup extends SmartView {
-  constructor(film) {
+  constructor(film, comments) {
     super();
 
     this._film = film;
+    this._comments = comments;
     this._popupCloseClickHandler = this._popupCloseClickHandler.bind(this);
     this._watchListClickHandler = this._watchListClickHandler.bind(this);
     this._watchedClickHandler = this._watchedClickHandler.bind(this);
@@ -189,7 +189,7 @@ export default class FilmPopup extends SmartView {
   }
 
   getTemplate() {
-    return filmPopupTemplate(this._film);
+    return filmPopupTemplate(this._film, this._comments);
   }
 
   _emojiHandler() {
@@ -199,7 +199,7 @@ export default class FilmPopup extends SmartView {
 
     emojiInputs.forEach((item) => {
       item.addEventListener(`click`, (evt) => {
-        this._commentEmoji.innerHTML = `<img src="images/emoji/${evt.target.value}.png" width="55" height="55" alt="${evt.target.id}">`;
+        this._commentEmoji.innerHTML = `<img src="images/emoji/${evt.target.value}.png" width="55" height="55" alt="${evt.target.id}" data-emoji-name="${evt.target.value}">`;
         this._commentEmojiId = evt.target.id;
       });
     });
