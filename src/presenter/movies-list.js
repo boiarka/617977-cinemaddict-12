@@ -124,7 +124,18 @@ export default class MovieList {
   _handleModelEvent(updateType, data) {
     switch (updateType) {
       case UpdateType.MINOR:
+
+        if (this._filmPresenter[data.id].getMode() === `POPUP`) {
+          this._filmPresenter[data.id].init(data);
+          return;
+        }
+
         this._filmPresenter[data.id].init(data);
+        this._clearList();
+        this._renderList({
+          resetRenderedFilmCount: true,
+          resetSortType: true
+        });
         break;
       case UpdateType.MAJOR:
         this._clearList();
