@@ -1,16 +1,17 @@
 import UserProfileView from "./view/user-profile.js";
-import SiteNavView from "./view/site-nav.js";
 import FilmsStatView from "./view/films-stat.js";
 
 import MovieListPresenter from "./presenter/movies-list.js";
+import FilterPresenter from "./presenter/filter.js";
+
+import FilmsModel from "./model/films.js";
+import CommentsModel from "./model/comments.js";
+import FilterModel from "./model/filter.js";
 
 import {
-  generateFilms
+  generateFilms,
+  generateComments
 } from "./mock/film.js";
-
-import {
-  generateFilters
-} from "./mock/filter.js";
 
 import {
   render,
@@ -21,19 +22,32 @@ import {
 const FILM_COUNT = 20;
 
 const films = new Array(FILM_COUNT).fill().map(generateFilms);
-const filters = generateFilters(films);
+const comments = [];
+
+films.forEach((film) => {
+  comments.push(...generateComments(film.id));
+});
+
+
+const filmsModel = new FilmsModel();
+filmsModel.setFilms(films);
+
+const commentsModel = new CommentsModel();
+commentsModel.setComments(comments);
+
+const filterModel = new FilterModel();
 
 const headerElement = document.querySelector(`.header`);
 const mainElement = document.querySelector(`.main`);
 const bodyElement = document.querySelector(`body`);
 
-const filmSectionPresenter = new MovieListPresenter(mainElement, bodyElement);
+const filmSectionPresenter = new MovieListPresenter(mainElement, bodyElement, filmsModel, filterModel, commentsModel);
+const filterPresenter = new FilterPresenter(mainElement, filterModel, filmsModel);
 
 render(headerElement, new UserProfileView(), RenderPosition.BEFOREEND);
-render(mainElement, new SiteNavView(filters), RenderPosition.BEFOREEND);
 
-
-filmSectionPresenter.init(films);
+filterPresenter.init();
+filmSectionPresenter.init();
 
 const footerStatisticContainer = document.querySelector(`.footer__statistics`);
 render(footerStatisticContainer, new FilmsStatView(FILM_COUNT), `beforeend`);

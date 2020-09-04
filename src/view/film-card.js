@@ -1,6 +1,6 @@
 import AbstractView from "./abstract.js";
 
-const filmCardTemplate = (film = {}) => {
+const filmCardTemplate = (film = {}, filmComments) => {
 
   const {
     name,
@@ -8,11 +8,12 @@ const filmCardTemplate = (film = {}) => {
     date,
     rating,
     description,
-    comments,
     isWatchlist,
     isWatched,
     isFavorites
   } = film;
+
+  const comments = filmComments;
 
   return (
     `<article class="film-card">
@@ -36,10 +37,11 @@ const filmCardTemplate = (film = {}) => {
 };
 
 export default class FilmCard extends AbstractView {
-  constructor(film) {
+  constructor(film, comments) {
     super();
 
     this._film = film;
+    this._comments = comments;
     this._filmClickHandler = this._filmClickHandler.bind(this);
     this._watchListClickHandler = this._watchListClickHandler.bind(this);
     this._watchedClickHandler = this._watchedClickHandler.bind(this);
@@ -47,7 +49,7 @@ export default class FilmCard extends AbstractView {
   }
 
   getTemplate() {
-    return filmCardTemplate(this._film);
+    return filmCardTemplate(this._film, this._comments);
   }
 
   _filmClickHandler(evt) {
