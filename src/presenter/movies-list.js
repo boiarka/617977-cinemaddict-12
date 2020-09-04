@@ -150,8 +150,7 @@ export default class MovieList {
   _renderFilm(film) {
     const filmPresenter = new FilmPresenter(this._filmsContainerComponent, this._handleViewAction, this._bodyElement, this._handleModeChange, this._commentsModel);
 
-    const filterType = this._filterModel.getFilter();
-    filmPresenter.init(film, filterType);
+    filmPresenter.init(film);
     this._filmPresenter[film.id] = filmPresenter;
   }
 
