@@ -75,6 +75,10 @@ export default class Film {
     }
   }
 
+  getMode() {
+    return this._mode;
+  }
+
   resetView() {
     if (this._mode !== Mode.DEFAULT) {
       this._closePopup();
@@ -167,7 +171,7 @@ export default class Film {
       id: Date.now() + parseInt(Math.random() * 10000, 10),
       filmId: this._film.id,
       name: `NEWNAME`,
-      date: null,
+      date: new Date(),
       text: he.encode(commentText.value),
       emoji: commentEmoji.dataset.emojiName
     });

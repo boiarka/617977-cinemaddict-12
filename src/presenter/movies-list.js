@@ -124,14 +124,19 @@ export default class MovieList {
   _handleModelEvent(updateType, data) {
     switch (updateType) {
       case UpdateType.MINOR:
-        this._filmPresenter[data.id].init(data);
+        const film = this._filmPresenter[data.id];
+        film.init(data);
+
+        if (film.getMode() === `DEFAULT`) {
+          this._handleModelEvent(UpdateType.MAJOR);
+        }
         break;
       case UpdateType.MAJOR:
-        this._clearList();
-        this._renderList({
+        this._clearList({
           resetRenderedFilmCount: true,
           resetSortType: true
         });
+        this._renderList();
         break;
     }
   }

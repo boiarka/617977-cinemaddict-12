@@ -1,4 +1,7 @@
 import SmartView from "./smart.js";
+import {
+  commentDate
+} from "../utils/film.js";
 
 const createCommentTemplate = (comment) => {
   const {
@@ -17,7 +20,7 @@ const createCommentTemplate = (comment) => {
       <p class="film-details__comment-text">${text}</p>
       <p class="film-details__comment-info">
         <span class="film-details__comment-author">${name}</span>
-        <span class="film-details__comment-day">${date}</span>
+        <span class="film-details__comment-day">${commentDate(date)}</span>
         <button class="film-details__comment-delete">Delete</button>
       </p>
     </div>
