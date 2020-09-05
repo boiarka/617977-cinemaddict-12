@@ -44,6 +44,10 @@ export default class Film {
     this._handleWatchListClick = this._handleWatchListClick.bind(this);
     this._handleWatchedClick = this._handleWatchedClick.bind(this);
     this._handleFavoritesClick = this._handleFavoritesClick.bind(this);
+
+    this._handleWatchListPopupClick = this._handleWatchListPopupClick.bind(this);
+    this._handleWatchedPopupClick = this._handleWatchedPopupClick.bind(this);
+    this._handleFavoritesPopupClick = this._handleFavoritesPopupClick.bind(this);
   }
 
   init(film) {
@@ -105,9 +109,9 @@ export default class Film {
     render(this._popupSection, this._filmPopupComponent, RenderPosition.BEFOREEND);
 
     this._filmPopupComponent.setPopupCloseClickHandler(this._handlePopupCloseClick);
-    this._filmPopupComponent.setWatchListClickHandler(this._handleWatchListClick);
-    this._filmPopupComponent.setWatchedClickHandler(this._handleWatchedClick);
-    this._filmPopupComponent.setFavoritesClickHandler(this._handleFavoritesClick);
+    this._filmPopupComponent.setWatchListClickHandler(this._handleWatchListPopupClick);
+    this._filmPopupComponent.setWatchedClickHandler(this._handleWatchedPopupClick);
+    this._filmPopupComponent.setFavoritesClickHandler(this._handleFavoritesPopupClick);
 
     document.addEventListener(`keydown`, this._escKeyDownHandler);
     document.addEventListener(`keydown`, this._ctrEnterDownHandler);
@@ -131,6 +135,7 @@ export default class Film {
     if (evt.key === `Escape` || evt.key === `Esc`) {
       evt.preventDefault();
       this._closePopup();
+      this._changeData(UserAction.UPDATE_FILM, UpdateType.MINOR, this._film);
     }
   }
 
@@ -194,6 +199,7 @@ export default class Film {
 
   _handlePopupCloseClick() {
     this._closePopup();
+    this._changeData(UserAction.UPDATE_FILM, UpdateType.MINOR, this._film);
   }
 
   _handleWatchListClick() {
@@ -210,6 +216,24 @@ export default class Film {
 
   _handleFavoritesClick() {
     this._changeData(UserAction.UPDATE_FILM, UpdateType.MINOR, Object.assign({}, this._film, {
+      isFavorites: !this._film.isFavorites
+    }));
+  }
+
+  _handleWatchListPopupClick() {
+    this._changeData(UserAction.UPDATE_FILM, UpdateType.PATCH, Object.assign({}, this._film, {
+      isWatchlist: !this._film.isWatchlist
+    }));
+  }
+
+  _handleWatchedPopupClick() {
+    this._changeData(UserAction.UPDATE_FILM, UpdateType.PATCH, Object.assign({}, this._film, {
+      isWatched: !this._film.isWatched
+    }));
+  }
+
+  _handleFavoritesPopupClick() {
+    this._changeData(UserAction.UPDATE_FILM, UpdateType.PATCH, Object.assign({}, this._film, {
       isFavorites: !this._film.isFavorites
     }));
   }

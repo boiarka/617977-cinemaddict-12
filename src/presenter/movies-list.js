@@ -36,6 +36,13 @@ import {
   filter
 } from "../utils/filter.js";
 
+const FiltersName = {
+  all: `default`,
+  watchlist: `isWatchlist`,
+  history: `isWatched`,
+  favorites: `isFavorites`
+};
+
 export default class MovieList {
   constructor(mainSection, bodyElement, filmsModel, filterModel, commentsModel) {
     this._filmsModel = filmsModel;
@@ -122,12 +129,21 @@ export default class MovieList {
   }
 
   _handleModelEvent(updateType, data) {
-    switch (updateType) {
-      case UpdateType.MINOR:
-        const film = this._filmPresenter[data.id];
-        film.init(data);
+    const filterType = this._filterModel.getFilter();
+    const filmFilteredType = FiltersName[filterType];
 
-        if (film.getMode() === `DEFAULT`) {
+    switch (updateType) {
+      case UpdateType.PATCH:
+        this._filmPresenter[data.id].init(data);
+        break;
+      case UpdateType.MINOR:
+        this._filmPresenter[data.id].init(data);
+
+        if (FiltersName.all === filmFilteredType) {
+          return;
+        }
+
+        if (data[filmFilteredType] === false) {
           this._handleModelEvent(UpdateType.MAJOR);
         }
         break;
