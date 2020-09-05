@@ -131,7 +131,6 @@ export default class Film {
     if (evt.key === `Escape` || evt.key === `Esc`) {
       evt.preventDefault();
       this._closePopup();
-      this._changeData(UserAction.UPDATE_FILM, UpdateType.MINOR, this._film);
     }
   }
 
@@ -195,7 +194,6 @@ export default class Film {
 
   _handlePopupCloseClick() {
     this._closePopup();
-    this._changeData(UserAction.UPDATE_FILM, UpdateType.MINOR, this._film);
   }
 
   _handleWatchListClick() {

@@ -124,25 +124,19 @@ export default class MovieList {
   _handleModelEvent(updateType, data) {
     switch (updateType) {
       case UpdateType.MINOR:
+        const film = this._filmPresenter[data.id];
+        film.init(data);
 
-        if (this._filmPresenter[data.id].getMode() === `POPUP`) {
-          this._filmPresenter[data.id].init(data);
-          return;
+        if (film.getMode() === `DEFAULT`) {
+          this._handleModelEvent(UpdateType.MAJOR);
         }
-
-        this._filmPresenter[data.id].init(data);
-        this._clearList();
-        this._renderList({
-          resetRenderedFilmCount: true,
-          resetSortType: true
-        });
         break;
       case UpdateType.MAJOR:
-        this._clearList();
-        this._renderList({
+        this._clearList({
           resetRenderedFilmCount: true,
           resetSortType: true
         });
+        this._renderList();
         break;
     }
   }
