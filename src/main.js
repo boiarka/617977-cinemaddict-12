@@ -1,5 +1,7 @@
 import UserProfileView from "./view/user-profile.js";
 import FilmsStatView from "./view/films-stat.js";
+import SiteMenuView from "./view/site-nav.js";
+import Statistic from "./view/statistic.js";
 
 import MovieListPresenter from "./presenter/movies-list.js";
 import FilterPresenter from "./presenter/filter.js";
@@ -41,13 +43,31 @@ const headerElement = document.querySelector(`.header`);
 const mainElement = document.querySelector(`.main`);
 const bodyElement = document.querySelector(`body`);
 
+const menuComponent = new SiteMenuView();
+render(mainElement, menuComponent, RenderPosition.AFTERBEGIN);
+
 const filmSectionPresenter = new MovieListPresenter(mainElement, bodyElement, filmsModel, filterModel, commentsModel);
-const filterPresenter = new FilterPresenter(mainElement, filterModel, filmsModel);
+const filterPresenter = new FilterPresenter(menuComponent.getElement(), filterModel, filmsModel);
 
 render(headerElement, new UserProfileView(), RenderPosition.BEFOREEND);
 
 filterPresenter.init();
 filmSectionPresenter.init();
+
+
+const statisticCOmponent = new Statistic();
+
+const openStat = () => {
+  filmSectionPresenter.destroy();
+  render(mainElement, statisticCOmponent, RenderPosition.BEFOREEND);
+};
+
+const closeStat = () => {
+  remove(statisticCOmponent);
+  filmSectionPresenter.init();
+};
+
+menuComponent.setStatClickHandler(openStat, closeStat);
 
 const footerStatisticContainer = document.querySelector(`.footer__statistics`);
 render(footerStatisticContainer, new FilmsStatView(FILM_COUNT), `beforeend`);

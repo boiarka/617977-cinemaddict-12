@@ -75,9 +75,6 @@ export default class MovieList {
 
     this._handleLoadMoreButtonClick = this._handleLoadMoreButtonClick.bind(this);
     this._handleSortTypeChange = this._handleSortTypeChange.bind(this);
-
-    this._filmsModel.addObserver(this._handleModelEvent);
-    this._filterModel.addObserver(this._handleModelEvent);
   }
 
   init() {
@@ -85,7 +82,23 @@ export default class MovieList {
     render(this._filmsSectionComponent, this._filmsListComponent, RenderPosition.BEFOREEND);
     render(this._filmsListComponent, this._filmsContainerComponent, RenderPosition.BEFOREEND);
 
+    this._filmsModel.addObserver(this._handleModelEvent);
+    this._filterModel.addObserver(this._handleModelEvent);
+
     this._renderList();
+  }
+
+  destroy() {
+    this._clearList({
+      resetRenderedFilmCount: true,
+      resetSortType: true
+    });
+
+    remove(this._filmsSectionComponent);
+    remove(this._filmsListComponent);
+
+    this._filmsModel.removeObserver(this._handleModelEvent);
+    this._filterModel.removeObserver(this._handleModelEvent);
   }
 
   _getFilms() {
@@ -144,7 +157,8 @@ export default class MovieList {
         }
 
         if (data[filmFilteredType] === false) {
-          this._handleModelEvent(UpdateType.MAJOR);
+          this._clearList();
+          this._renderList();
         }
         break;
       case UpdateType.MAJOR:

@@ -1,74 +1,53 @@
 import AbstractView from "./abstract.js";
 import {
-  FilterType
-} from "../const.js";
+  remove
+} from "../utils/render.js";
 
-
-const FILTERS_LABELS = {
-  [FilterType.ALL]: `All movies`,
-  [FilterType.WATCHLIST]: `Watchlist`,
-  [FilterType.HISTORY]: `History`,
-  [FilterType.FAVORITES]: `Favorites`,
-};
-
-
-const createNavItemTemplate = (filter, currentFilterType) => {
-  const {
-    type,
-    name,
-    count
-  } = filter;
-
-  return `<a 
-  href="#${name}" 
-  class="main-navigation__item ${type === currentFilterType ? `main-navigation__item--active` : ``}"
-  data-filter-type="${type}">
-  ${FILTERS_LABELS[type]}
-  ${name === FilterType.ALL ? `` : `<span class="main-navigation__item-count">${count}</span>`}
-  </a>`;
-};
-
-const mainNavTemplate = (filterItems, currentFilterType) => {
-  const navItemsTemplate = filterItems
-    .map((filter) => createNavItemTemplate(filter, currentFilterType))
-    .join(``);
-
+const mainNavTemplate = () => {
   return (
     `<nav class="main-navigation">
-          <div class="main-navigation__items">
-            ${navItemsTemplate}
-          </div>
-          <a href="#stats" class="main-navigation__additional">Stats</a>
+          <a href="#stats" class="main-navigation__additional" data-menu-type="stat">Stats</a>
         </nav>`
   );
 };
 
 
 export default class SiteNav extends AbstractView {
-  constructor(filters, currentFilterType) {
+  constructor() {
     super();
 
-    this._filters = filters;
-    this._currentFilter = currentFilterType;
-
-    this._filterTypeChangeHandler = this._filterTypeChangeHandler.bind(this);
+    this._statClickHandler = this._statClickHandler.bind(this);
+    this._isStatOpened = false;
   }
 
   getTemplate() {
     return mainNavTemplate(this._filters, this._currentFilter);
   }
 
-  _filterTypeChangeHandler(evt) {
+  _statClickHandler(evt) {
     if (evt.target.tagName !== `A`) {
       return;
     }
 
     evt.preventDefault();
-    this._callback.filterTypeChange(evt.target.dataset.filterType);
+
+    if (evt.target.dataset.menuType && !this._isStatOpened) {
+      this._callback.openStat();
+      this._isStatOpened = true;
+      return;
+    }
+
+    if (evt.target.dataset.filterType && this._isStatOpened) {
+      this._callback.closeStat();
+      this._isStatOpened = false;
+      return;
+    }
+
   }
 
-  setFilterTypeChangeHandler(callback) {
-    this._callback.filterTypeChange = callback;
-    this.getElement().addEventListener(`click`, this._filterTypeChangeHandler);
+  setStatClickHandler(callback1, callback2) {
+    this._callback.openStat = callback1;
+    this._callback.closeStat = callback2;
+    this.getElement().addEventListener(`click`, this._statClickHandler);
   }
 }
