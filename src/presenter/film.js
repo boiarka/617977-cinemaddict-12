@@ -203,38 +203,41 @@ export default class Film {
   }
 
   _handleWatchListClick() {
-    this._changeData(UserAction.UPDATE_FILM, UpdateType.MINOR, Object.assign({}, this._film, {
-      isWatchlist: !this._film.isWatchlist
-    }));
+    this._film.user_details.watchlist = !this._film.user_details.watchlist;
+    this._changeData(UserAction.UPDATE_FILM, UpdateType.MINOR, this._film);
   }
 
+  // Вот было:
+  //
+  // _handleWatchListClick() {
+  //   this._changeData(UserAction.UPDATE_FILM, UpdateType.MINOR, Object.assign({}, this._film, {
+  //     isWatchlist: !this._film.isWatchlist
+  //   }));
+  // }
+
+
   _handleWatchedClick() {
-    this._changeData(UserAction.UPDATE_FILM, UpdateType.MINOR, Object.assign({}, this._film, {
-      isWatched: !this._film.isWatched
-    }));
+    this._film.user_details.already_watched = !this._film.user_details.already_watched;
+    this._changeData(UserAction.UPDATE_FILM, UpdateType.MINOR, this._film);
   }
 
   _handleFavoritesClick() {
-    this._changeData(UserAction.UPDATE_FILM, UpdateType.MINOR, Object.assign({}, this._film, {
-      isFavorites: !this._film.isFavorites
-    }));
+    this._film.user_details.favorite = !this._film.user_details.favorite;
+    this._changeData(UserAction.UPDATE_FILM, UpdateType.MINOR, this._film);
   }
 
   _handleWatchListPopupClick() {
-    this._changeData(UserAction.UPDATE_FILM, UpdateType.PATCH, Object.assign({}, this._film, {
-      isWatchlist: !this._film.isWatchlist
-    }));
+    this._film.user_details.watchlist = !this._film.user_details.watchlist;
+    this._changeData(UserAction.UPDATE_FILM, UpdateType.PATCH, this._film);
   }
 
   _handleWatchedPopupClick() {
-    this._changeData(UserAction.UPDATE_FILM, UpdateType.PATCH, Object.assign({}, this._film, {
-      isWatched: !this._film.isWatched
-    }));
+    this._film.user_details.already_watched = !this._film.user_details.already_watched;
+    this._changeData(UserAction.UPDATE_FILM, UpdateType.PATCH, this._film);
   }
 
   _handleFavoritesPopupClick() {
-    this._changeData(UserAction.UPDATE_FILM, UpdateType.PATCH, Object.assign({}, this._film, {
-      isFavorites: !this._film.isFavorites
-    }));
+    this._film.user_details.favorite = !this._film.user_details.favorite;
+    this._changeData(UserAction.UPDATE_FILM, UpdateType.PATCH, this._film);
   }
 }

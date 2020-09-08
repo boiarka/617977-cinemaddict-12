@@ -54,16 +54,15 @@ render(headerElement, new UserProfileView(), RenderPosition.BEFOREEND);
 filterPresenter.init();
 filmSectionPresenter.init();
 
-
-const statisticCOmponent = new Statistic();
+const statisticComponent = new Statistic(filmsModel.getFilms());
 
 const openStat = () => {
   filmSectionPresenter.destroy();
-  render(mainElement, statisticCOmponent, RenderPosition.BEFOREEND);
+  render(mainElement, statisticComponent, RenderPosition.BEFOREEND);
 };
 
 const closeStat = () => {
-  remove(statisticCOmponent);
+  remove(statisticComponent);
   filmSectionPresenter.init();
 };
 

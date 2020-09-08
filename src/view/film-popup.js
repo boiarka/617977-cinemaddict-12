@@ -63,13 +63,18 @@ const createAddCommentTemplate = () => {
 
 
 const filmPopupTemplate = (film, comments) => {
+
+  const isWatchlist = film.user_details.watchlist;
+  const isWatched = film.user_details.already_watched;
+  const isFavorites = film.user_details.favorite;
+
   const {
-    name,
-    poster,
-    description,
-    isWatchlist,
-    isWatched,
-    isFavorites
+    film_info: {
+      title,
+      total_rating,
+      poster,
+      description,
+    },
   } = film;
 
   let commentsTemplate = ``;
@@ -96,12 +101,12 @@ const filmPopupTemplate = (film, comments) => {
         <div class="film-details__info">
           <div class="film-details__info-head">
             <div class="film-details__title-wrap">
-              <h3 class="film-details__title">${name}</h3>
+              <h3 class="film-details__title">${title}</h3>
               <p class="film-details__title-original">Original: The Great Flamarion</p>
             </div>
 
             <div class="film-details__rating">
-              <p class="film-details__total-rating">8.9</p>
+              <p class="film-details__total-rating">${total_rating}</p>
             </div>
           </div>
 

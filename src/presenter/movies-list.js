@@ -38,9 +38,9 @@ import {
 
 const FiltersName = {
   all: `default`,
-  watchlist: `isWatchlist`,
-  history: `isWatched`,
-  favorites: `isFavorites`
+  watchlist: `watchlist`,
+  history: `already_watched`,
+  favorites: `favorite`
 };
 
 export default class MovieList {
@@ -156,7 +156,7 @@ export default class MovieList {
           return;
         }
 
-        if (data[filmFilteredType] === false) {
+        if (data.user_details[filmFilteredType] === false) {
           this._clearList();
           this._renderList();
         }

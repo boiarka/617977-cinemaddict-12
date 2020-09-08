@@ -1,27 +1,48 @@
+import moment from "moment";
+
 import AbstractView from "./abstract.js";
+
+import {
+  getFilmDuration
+} from "../utils/film.js";
 
 const filmCardTemplate = (film = {}, filmComments) => {
 
   const {
-    name,
-    poster,
-    date,
-    rating,
-    description,
-    isWatchlist,
-    isWatched,
-    isFavorites
+    film_info: {
+      title,
+      total_rating,
+      poster,
+      description,
+      runtime,
+      release: {
+        date,
+      }
+    },
+    user_details: {
+      watchlist,
+      already_watched,
+      favorite
+    }
   } = film;
+
+  const isWatchlist = watchlist;
+  const isWatched = already_watched;
+  const isFavorites = favorite;
 
   const comments = filmComments;
 
+
+  const filmDuration = getFilmDuration(runtime);
+
+
   return (
     `<article class="film-card">
-          <h3 class="film-card__title">${name}</h3>
-          <p class="film-card__rating">${rating}</p>
+          <h3 class="film-card__title">${title}</h3>
+          <p class="film-card__rating">${total_rating}</p>
           <p class="film-card__info">
             <span class="film-card__year">${date}</span>
-            <span class="film-card__duration">1h 55m</span>
+            <span class="film-card__duration">${filmDuration}</span>
             <span class="film-card__genre">Musical</span>
           </p>
           <img src="./images/posters/${poster}" alt="" class="film-card__poster">

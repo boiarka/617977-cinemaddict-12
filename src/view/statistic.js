@@ -1,6 +1,25 @@
 import AbstractView from "./abstract.js";
 
-const createStatisticTemplate = () => {
+import {
+  totalFilmsDuration
+} from "../utils/film.js";
+
+const getWatchedFilms = (films) => {
+  return films.filter((film) => film.user_details.already_watched);
+};
+
+const createStatisticTemplate = (films) => {
+
+  const watchedFilms = getWatchedFilms(films);
+  const watchedFilmsCount = watchedFilms.length;
+
+  const filmsDurations = [];
+  watchedFilms.forEach((film) => {
+    filmsDurations.push(film.film_info.runtime);
+  });
+
+  const totalDuration = totalFilmsDuration(filmsDurations.reduce((total, duration) => total + duration));
+
   return `<section class="statistic">
   <p class="statistic__rank">
     Your rank
@@ -30,11 +49,11 @@ const createStatisticTemplate = () => {
   <ul class="statistic__text-list">
     <li class="statistic__text-item">
       <h4 class="statistic__item-title">You watched</h4>
-      <p class="statistic__item-text">22 <span class="statistic__item-description">movies</span></p>
+      <p class="statistic__item-text">${watchedFilmsCount} <span class="statistic__item-description">movies</span></p>
     </li>
     <li class="statistic__text-item">
       <h4 class="statistic__item-title">Total duration</h4>
-      <p class="statistic__item-text">130 <span class="statistic__item-description">h</span> 22 <span class="statistic__item-description">m</span></p>
+      <p class="statistic__item-text">${totalDuration}</p>
     </li>
     <li class="statistic__text-item">
       <h4 class="statistic__item-title">Top genre</h4>
@@ -50,7 +69,13 @@ const createStatisticTemplate = () => {
 };
 
 export default class Statistic extends AbstractView {
+  constructor(films) {
+    super();
+
+    this._films = films;
+
+  }
   getTemplate() {
-    return createStatisticTemplate();
+    return createStatisticTemplate(this._films);
   }
 }
