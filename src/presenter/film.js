@@ -218,6 +218,8 @@ export default class Film {
 
   _handleWatchedClick() {
     this._film.user_details.already_watched = !this._film.user_details.already_watched;
+    this._film.user_details.watching_date = new Date();
+    console.log(new Date().getTime());
     this._changeData(UserAction.UPDATE_FILM, UpdateType.MINOR, this._film);
   }
 

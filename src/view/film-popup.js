@@ -67,11 +67,11 @@ const filmPopupTemplate = (film, comments) => {
   const isWatchlist = film.user_details.watchlist;
   const isWatched = film.user_details.already_watched;
   const isFavorites = film.user_details.favorite;
+  const totalRating = film.film_info.total_rating;
 
   const {
     film_info: {
       title,
-      total_rating,
       poster,
       description,
     },
@@ -106,7 +106,7 @@ const filmPopupTemplate = (film, comments) => {
             </div>
 
             <div class="film-details__rating">
-              <p class="film-details__total-rating">${total_rating}</p>
+              <p class="film-details__total-rating">${totalRating}</p>
             </div>
           </div>
 

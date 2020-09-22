@@ -59,6 +59,8 @@ const statisticComponent = new Statistic(filmsModel.getFilms());
 const openStat = () => {
   filmSectionPresenter.destroy();
   render(mainElement, statisticComponent, RenderPosition.BEFOREEND);
+  statisticComponent.renderChart();
+  statisticComponent.setStatChangeHandler();
 };
 
 const closeStat = () => {

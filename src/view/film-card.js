@@ -7,11 +7,11 @@ import {
 } from "../utils/film.js";
 
 const filmCardTemplate = (film = {}, filmComments) => {
+  const totalRating = film.film_info.total_rating;
 
   const {
     film_info: {
       title,
-      total_rating,
       poster,
       description,
       runtime,
@@ -21,14 +21,13 @@ const filmCardTemplate = (film = {}, filmComments) => {
     },
     user_details: {
       watchlist,
-      already_watched,
       favorite
     }
   } = film;
 
   const isWatchlist = watchlist;
-  const isWatched = already_watched;
   const isFavorites = favorite;
+  const isWatched = film.user_details.already_watched;
 
   const comments = filmComments;
 
@@ -39,7 +38,7 @@ const filmCardTemplate = (film = {}, filmComments) => {
   return (
     `<article class="film-card">
           <h3 class="film-card__title">${title}</h3>
-          <p class="film-card__rating">${total_rating}</p>
+          <p class="film-card__rating">${totalRating}</p>
           <p class="film-card__info">
             <span class="film-card__year">${date}</span>
             <span class="film-card__duration">${filmDuration}</span>

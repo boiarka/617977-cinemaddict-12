@@ -1,7 +1,4 @@
 import AbstractView from "./abstract.js";
-import {
-  remove
-} from "../utils/render.js";
 
 const mainNavTemplate = () => {
   return (

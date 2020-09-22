@@ -62,6 +62,7 @@ const generateDescriptions = () => {
   return description;
 };
 
+
 const generateDate = () => {
   const isDate = Boolean(getRandomInteger(0, 1));
 
@@ -94,6 +95,16 @@ const generateComment = (filmId) => {
   };
 
   return comment;
+};
+
+const generateGenres = () => {
+
+  const genres = [`Sci-Fi`, `Animation`, `Fantasy`, `Comedy`, `TV Series`, `Horror`, `Adventures`, `Drama`, `Musical`, `Western`];
+  const randomIndexOne = getRandomInteger(2, genres.length - 1);
+  const randomIndexTwo = getRandomInteger(1, randomIndexOne);
+  const filmGenres = genres.slice(randomIndexTwo, randomIndexOne);
+
+  return filmGenres;
 };
 
 
@@ -132,9 +143,7 @@ export const generateFilms = () => {
         "release_country": `Finland`
       },
       "runtime": getRandomInteger(50, 187),
-      "genre": [
-        `Comedy`
-      ],
+      "genre": generateGenres(),
       "description": description
     },
     "user_details": {

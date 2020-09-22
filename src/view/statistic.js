@@ -1,14 +1,97 @@
 import AbstractView from "./abstract.js";
+import Chart from "chart.js";
+import ChartDataLabels from 'chartjs-plugin-datalabels';
 
 import {
   totalFilmsDuration
 } from "../utils/film.js";
 
+const BAR_HEIGHT = 50;
+
+
 const getWatchedFilms = (films) => {
   return films.filter((film) => film.user_details.already_watched);
 };
 
-const createStatisticTemplate = (films) => {
+const getObjCountGenres = (films) => {
+  const watchedFilmGenres = [];
+  films.forEach((film) => {
+    watchedFilmGenres.push(...film.film_info.genre);
+  });
+
+  const objGenres = {};
+
+  for (let i = 0; i < watchedFilmGenres.length; i++) {
+    let item = watchedFilmGenres[i];
+    objGenres[item] = objGenres[item] ? objGenres[item] + 1 : 1;
+  }
+
+  return objGenres;
+};
+
+const renderChart = (statisticCtx, genres, countGenres) => {
+
+  statisticCtx.height = BAR_HEIGHT * 5;
+
+  return new Chart(statisticCtx, {
+    plugins: [ChartDataLabels],
+    type: `horizontalBar`,
+    data: {
+      labels: genres,
+      datasets: [{
+        data: countGenres,
+        backgroundColor: `#ffe800`,
+        hoverBackgroundColor: `#ffe800`,
+        anchor: `start`
+      }]
+    },
+    options: {
+      plugins: {
+        datalabels: {
+          font: {
+            size: 20
+          },
+          color: `#ffffff`,
+          anchor: `start`,
+          align: `start`,
+          offset: 40,
+        }
+      },
+      scales: {
+        yAxes: [{
+          ticks: {
+            fontColor: `#ffffff`,
+            padding: 100,
+            fontSize: 20
+          },
+          gridLines: {
+            display: false,
+            drawBorder: false
+          },
+          barThickness: 24
+        }],
+        xAxes: [{
+          ticks: {
+            display: false,
+            beginAtZero: true
+          },
+          gridLines: {
+            display: false,
+            drawBorder: false
+          },
+        }],
+      },
+      legend: {
+        display: false
+      },
+      tooltips: {
+        enabled: false
+      }
+    }
+  });
+};
+
+const createStatisticTemplate = (films, topGenre) => {
 
   const watchedFilms = getWatchedFilms(films);
   const watchedFilmsCount = watchedFilms.length;
@@ -18,7 +101,7 @@ const createStatisticTemplate = (films) => {
     filmsDurations.push(film.film_info.runtime);
   });
 
-  const totalDuration = totalFilmsDuration(filmsDurations.reduce((total, duration) => total + duration));
+  const totalDuration = watchedFilmsCount > 0 ? totalFilmsDuration(filmsDurations.reduce((total, duration) => total + duration)) : 0;
 
   return `<section class="statistic">
   <p class="statistic__rank">
@@ -57,7 +140,7 @@ const createStatisticTemplate = (films) => {
     </li>
     <li class="statistic__text-item">
       <h4 class="statistic__item-title">Top genre</h4>
-      <p class="statistic__item-text">Sci-Fi</p>
+      <p class="statistic__item-text">${topGenre}</p>
     </li>
   </ul>
 
@@ -73,9 +156,56 @@ export default class Statistic extends AbstractView {
     super();
 
     this._films = films;
-
   }
+
   getTemplate() {
-    return createStatisticTemplate(this._films);
+    return createStatisticTemplate(this._films, this._getTopGenre());
+  }
+
+  renderChart() {
+    const watchedFilms = this._getWatchedFilms();
+
+    const objGenres = getObjCountGenres(watchedFilms);
+
+    const sortedGenres = Object.keys(objGenres).sort(function (a, b) {
+      return objGenres[b] - objGenres[a];
+    });
+
+    const countGenres = Object.values(objGenres).sort(function (a, b) {
+      return b - a;
+    });
+
+    this._topGenre = sortedGenres[0];
+
+    this._setCharts(sortedGenres, countGenres);
+  }
+
+  _getWatchedFilms() {
+    return getWatchedFilms(this._films);
+  }
+
+  _getTopGenre() {
+    const watchedFilms = this._getWatchedFilms();
+    const topGenre = Object.keys(getObjCountGenres(watchedFilms))[0];
+    return topGenre ? topGenre : ``;
+  }
+
+  _setCharts(genres, countGenres) {
+    const statisticCtx = this.getElement().querySelector(`.statistic__chart`);
+    this._filmChart = renderChart(statisticCtx, genres, countGenres);
+  }
+
+  _statChangeHandler(evt) {
+    if (evt.target.tagName !== `LABEL`) {
+      return;
+    }
+
+    evt.preventDefault();
+
+    console.log(evt.target.htmlFor);
+  }
+
+  setStatChangeHandler() {
+    this.getElement().querySelector(`.statistic__filters`).addEventListener(`click`, this._statChangeHandler);
   }
 }

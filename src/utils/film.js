@@ -32,8 +32,14 @@ export const getFilmDuration = (runtime) => {
 
 // для вывода Total duration в СТАТИСТИКЕ фильмов
 export const totalFilmsDuration = (runtime) => {
-  return moment.duration(Number(runtime), `minutes`)
-    .format(`h[<span class="statistic__item-description">h</span>] m[<span class="statistic__item-description">m</span>]`, {
-      trim: `both mid`
-    });
+  const timeObj = moment.duration(Number(runtime), `minutes`);
+  const hours = timeObj.hours();
+  const minutes = timeObj.minutes();
+
+  return `${hours}<span class="statistic__item-description">h</span> ${minutes}<span class="statistic__item-description">m</span>`;
+
+  // return moment.duration(Number(runtime), `minutes`)
+  //   .format(`h[<span class="statistic__item-description">h</span>] m[<span class="statistic__item-description">m</span>]`, {
+  //     trim: `both mid`
+  //   });
 };
