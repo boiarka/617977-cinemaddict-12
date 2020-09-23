@@ -1,4 +1,4 @@
-import FilterView from "../view/site-nav.js";
+import FilterView from "../view/filters.js";
 
 import {
   render,
@@ -44,7 +44,7 @@ export default class Filter {
     this._filterComponent.setFilterTypeChangeHandler(this._handleFilterTypeChange);
 
     if (prevFilterComponent === null) {
-      render(this._filterContainer, this._filterComponent, RenderPosition.BEFOREEND);
+      render(this._filterContainer, this._filterComponent, RenderPosition.AFTERBEGIN);
       return;
     }
 
@@ -67,27 +67,26 @@ export default class Filter {
   _getFilters() {
     const films = this._filmsModel.getFilms();
 
-    return [
-      {
-        type: FilterType.ALL,
-        name: `All`,
-        count: filter[FilterType.ALL](films).length
-      },
-      {
-        type: FilterType.WATCHLIST,
-        name: `watchlist`,
-        count: filter[FilterType.WATCHLIST](films).length
-      },
-      {
-        type: FilterType.HISTORY,
-        name: `history`,
-        count: filter[FilterType.HISTORY](films).length
-      },
-      {
-        type: FilterType.FAVORITES,
-        name: `favorites`,
-        count: filter[FilterType.FAVORITES](films).length
-      },
+    return [{
+      type: FilterType.ALL,
+      name: `All`,
+      count: filter[FilterType.ALL](films).length
+    },
+    {
+      type: FilterType.WATCHLIST,
+      name: `watchlist`,
+      count: filter[FilterType.WATCHLIST](films).length
+    },
+    {
+      type: FilterType.HISTORY,
+      name: `history`,
+      count: filter[FilterType.HISTORY](films).length
+    },
+    {
+      type: FilterType.FAVORITES,
+      name: `favorites`,
+      count: filter[FilterType.FAVORITES](films).length
+    },
     ];
   }
 }

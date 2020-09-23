@@ -62,6 +62,7 @@ const generateDescriptions = () => {
   return description;
 };
 
+
 const generateDate = () => {
   const isDate = Boolean(getRandomInteger(0, 1));
 
@@ -96,6 +97,16 @@ const generateComment = (filmId) => {
   return comment;
 };
 
+const generateGenres = () => {
+
+  const genres = [`Sci-Fi`, `Animation`, `Fantasy`, `Comedy`, `TV Series`, `Horror`, `Adventures`, `Drama`, `Musical`, `Western`];
+  const randomIndexOne = getRandomInteger(2, genres.length - 1);
+  const randomIndexTwo = getRandomInteger(1, randomIndexOne);
+  const filmGenres = genres.slice(randomIndexTwo, randomIndexOne);
+
+  return filmGenres;
+};
+
 
 export const generateComments = (id) => {
   const randomIndex = getRandomInteger(1, COMMENTS_COUNT - 1);
@@ -112,14 +123,34 @@ export const generateFilms = () => {
   const description = generateDescriptions();
 
   return {
-    id: generateId(),
-    name,
-    poster,
-    date: getRandomInteger(1960, 2020),
-    rating: getRandomInteger(0, 10),
-    description,
-    isWatchlist: getRandomInteger(0, 1),
-    isWatched: getRandomInteger(0, 1),
-    isFavorites: getRandomInteger(0, 1),
+    "id": generateId(),
+    "comments": [],
+    "film_info": {
+      "title": name,
+      "alternative_title": name,
+      "total_rating": getRandomInteger(0, 10),
+      "poster": poster,
+      "age_rating": 0,
+      "director": `Tom Ford`,
+      "writers": [
+        `Takeshi Kitano`
+      ],
+      "actors": [
+        `Morgan Freeman`
+      ],
+      "release": {
+        "date": getRandomInteger(1960, 2020),
+        "release_country": `Finland`
+      },
+      "runtime": getRandomInteger(50, 187),
+      "genre": generateGenres(),
+      "description": description
+    },
+    "user_details": {
+      "watchlist": getRandomInteger(0, 1),
+      "already_watched": getRandomInteger(0, 1),
+      "watching_date": `2019-04-12T16:12:32.554Z`,
+      "favorite": getRandomInteger(0, 1)
+    }
   };
 };
