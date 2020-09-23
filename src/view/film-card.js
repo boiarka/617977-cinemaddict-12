@@ -6,10 +6,11 @@ import {
   getFilmDuration
 } from "../utils/film.js";
 
-const filmCardTemplate = (film = {}, filmComments) => {
+const filmCardTemplate = (film = {}) => {
   const totalRating = film.film_info.total_rating;
 
   const {
+    comments,
     film_info: {
       title,
       poster,
@@ -28,10 +29,7 @@ const filmCardTemplate = (film = {}, filmComments) => {
   const isWatchlist = watchlist;
   const isFavorites = favorite;
   const isWatched = film.user_details.already_watched;
-
-  const comments = filmComments;
-
-
+  const filmDate = moment(date).year();
   const filmDuration = getFilmDuration(runtime);
 
 
@@ -40,11 +38,11 @@ const filmCardTemplate = (film = {}, filmComments) => {
           <h3 class="film-card__title">${title}</h3>
           <p class="film-card__rating">${totalRating}</p>
           <p class="film-card__info">
-            <span class="film-card__year">${date}</span>
+            <span class="film-card__year">${filmDate}</span>
             <span class="film-card__duration">${filmDuration}</span>
             <span class="film-card__genre">Musical</span>
           </p>
-          <img src="./images/posters/${poster}" alt="" class="film-card__poster">
+          <img src="${poster}" alt="" class="film-card__poster">
           <p class="film-card__description">${description}</p>
           <a class="film-card__comments">${comments.length} comments</a>
           <form class="film-card__controls">

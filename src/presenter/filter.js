@@ -68,25 +68,25 @@ export default class Filter {
     const films = this._filmsModel.getFilms();
 
     return [{
-        type: FilterType.ALL,
-        name: `All`,
-        count: filter[FilterType.ALL](films).length
-      },
-      {
-        type: FilterType.WATCHLIST,
-        name: `watchlist`,
-        count: filter[FilterType.WATCHLIST](films).length
-      },
-      {
-        type: FilterType.HISTORY,
-        name: `history`,
-        count: filter[FilterType.HISTORY](films).length
-      },
-      {
-        type: FilterType.FAVORITES,
-        name: `favorites`,
-        count: filter[FilterType.FAVORITES](films).length
-      },
+      type: FilterType.ALL,
+      name: `All`,
+      count: filter[FilterType.ALL](films).length
+    },
+    {
+      type: FilterType.WATCHLIST,
+      name: `watchlist`,
+      count: filter[FilterType.WATCHLIST](films).length
+    },
+    {
+      type: FilterType.HISTORY,
+      name: `history`,
+      count: filter[FilterType.HISTORY](films).length
+    },
+    {
+      type: FilterType.FAVORITES,
+      name: `favorites`,
+      count: filter[FilterType.FAVORITES](films).length
+    },
     ];
   }
 }

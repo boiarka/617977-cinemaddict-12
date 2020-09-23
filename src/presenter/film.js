@@ -1,4 +1,5 @@
 import he from "he";
+import moment from "moment";
 
 import FilmCardView from "../view/film-card.js";
 import FilmPopupView from "../view/film-popup.js";
@@ -21,12 +22,13 @@ const Mode = {
 };
 
 export default class Film {
-  constructor(mainSection, changeData, popupSection, changeMode, commentsModel) {
+  constructor(mainSection, changeData, popupSection, changeMode, commentsModel, api) {
     this._mainSection = mainSection;
     this._popupSection = popupSection;
     this._changeData = changeData;
     this._changeMode = changeMode;
     this._commentsModel = commentsModel;
+    this._api = api;
 
     this._filmComponent = null;
     this._filmPopupComponent = null;
@@ -52,7 +54,9 @@ export default class Film {
 
   init(film) {
     this._film = film;
-    this._comments = this._commentsModel.getCommentsById(film.id);
+    this._api.getComment(this._film.id).then((comments) => {
+      this._comments = comments;
+    });
 
     const prevFilmComponent = this._filmComponent;
 
@@ -152,6 +156,7 @@ export default class Film {
       comment.addEventListener(`click`, (evt) => {
         evt.preventDefault();
         if (this._comments.length > 0) {
+
           const commentId = this._comments[index].id;
           this._commentsModel.deleteComment(commentId);
           this._changeData(UserAction.UPDATE_FILM, UpdateType.MINOR, this._film);
@@ -217,9 +222,8 @@ export default class Film {
 
 
   _handleWatchedClick() {
-    this._film.user_details.already_watched = !this._film.user_details.already_watched;
-    this._film.user_details.watching_date = new Date();
-    console.log(new Date().getTime());
+    this._film.user_details[`already_watched`] = !this._film.user_details.already_watched;
+    this._film.user_details[`watching_date`] = moment(new Date()).format();
     this._changeData(UserAction.UPDATE_FILM, UpdateType.MINOR, this._film);
   }
 
@@ -234,7 +238,7 @@ export default class Film {
   }
 
   _handleWatchedPopupClick() {
-    this._film.user_details.already_watched = !this._film.user_details.already_watched;
+    this._film.user_details[`already_watched`] = !this._film.user_details.already_watched;
     this._changeData(UserAction.UPDATE_FILM, UpdateType.PATCH, this._film);
   }
 

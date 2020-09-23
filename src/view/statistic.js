@@ -158,6 +158,10 @@ export default class Statistic extends AbstractView {
     this._films = films;
   }
 
+  setFilms(films) {
+    this._films = films;
+  }
+
   getTemplate() {
     return createStatisticTemplate(this._films, this._getTopGenre());
   }
@@ -186,7 +190,13 @@ export default class Statistic extends AbstractView {
 
   _getTopGenre() {
     const watchedFilms = this._getWatchedFilms();
-    const topGenre = Object.keys(getObjCountGenres(watchedFilms))[0];
+
+
+    const objGenres = getObjCountGenres(watchedFilms);
+    const topGenre = Object.keys(objGenres).sort(function (a, b) {
+      return objGenres[b] - objGenres[a];
+    })[0];
+
     return topGenre ? topGenre : ``;
   }
 
@@ -201,8 +211,6 @@ export default class Statistic extends AbstractView {
     }
 
     evt.preventDefault();
-
-    console.log(evt.target.htmlFor);
   }
 
   setStatChangeHandler() {

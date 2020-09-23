@@ -4,7 +4,10 @@ import momentDurationFormatSetup from "moment-duration-format";
 momentDurationFormatSetup(moment);
 
 export const sortByDate = (filmA, filmB) => {
-  return filmB.film_info.release.date - filmA.film_info.release.date;
+  const filmADate = moment(filmA.film_info.release.date).year();
+  const filmBDate = moment(filmB.film_info.release.date).year();
+
+  return filmBDate - filmADate;
 };
 
 export const sortByRating = (filmA, filmB) => {
@@ -16,10 +19,6 @@ export const sortByComments = (filmA, filmB) => {
 };
 
 export const commentDate = (dueDate) => {
-  if (!(dueDate instanceof Date)) {
-    return ``;
-  }
-
   return moment(dueDate).format(`YYYY/MM/DD hh:mm`);
 };
 

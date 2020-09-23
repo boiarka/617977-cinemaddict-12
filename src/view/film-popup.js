@@ -3,23 +3,23 @@ import {
   commentDate
 } from "../utils/film.js";
 
-const createCommentTemplate = (comment) => {
+const createCommentTemplate = (commentObj) => {
   const {
-    name,
+    author,
     date,
-    text,
-    emoji
-  } = comment;
+    comment,
+    emotion
+  } = commentObj;
 
   return (
     `<li class="film-details__comment">
     <span class="film-details__comment-emoji">
-      <img src="./images/emoji/${emoji}.png" width="55" height="55" alt="emoji-${emoji}">
+      <img src="./images/emoji/${emotion}.png" width="55" height="55" alt="emoji-${emotion}">
     </span>
     <div>
-      <p class="film-details__comment-text">${text}</p>
+      <p class="film-details__comment-text">${comment}</p>
       <p class="film-details__comment-info">
-        <span class="film-details__comment-author">${name}</span>
+        <span class="film-details__comment-author">${author}</span>
         <span class="film-details__comment-day">${commentDate(date)}</span>
         <button class="film-details__comment-delete">Delete</button>
       </p>
@@ -68,12 +68,15 @@ const filmPopupTemplate = (film, comments) => {
   const isWatched = film.user_details.already_watched;
   const isFavorites = film.user_details.favorite;
   const totalRating = film.film_info.total_rating;
+  const alternativeTitle = film.film_info.alternative_title;
 
   const {
     film_info: {
       title,
       poster,
       description,
+      director,
+
     },
   } = film;
 
@@ -93,7 +96,7 @@ const filmPopupTemplate = (film, comments) => {
       </div>
       <div class="film-details__info-wrap">
         <div class="film-details__poster">
-          <img class="film-details__poster-img" src="./images/posters/${poster}" alt="">
+          <img class="film-details__poster-img" src="${poster}" alt="">
 
           <p class="film-details__age">18+</p>
         </div>
@@ -102,7 +105,7 @@ const filmPopupTemplate = (film, comments) => {
           <div class="film-details__info-head">
             <div class="film-details__title-wrap">
               <h3 class="film-details__title">${title}</h3>
-              <p class="film-details__title-original">Original: The Great Flamarion</p>
+              <p class="film-details__title-original">${alternativeTitle}</p>
             </div>
 
             <div class="film-details__rating">
@@ -113,7 +116,7 @@ const filmPopupTemplate = (film, comments) => {
           <table class="film-details__table">
             <tr class="film-details__row">
               <td class="film-details__term">Director</td>
-              <td class="film-details__cell">Anthony Mann</td>
+              <td class="film-details__cell">${director}</td>
             </tr>
             <tr class="film-details__row">
               <td class="film-details__term">Writers</td>
