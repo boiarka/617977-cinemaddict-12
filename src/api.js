@@ -19,28 +19,25 @@ export default class Api {
 
   getFilms() {
     return this._load({
-        url: `movies`
-      })
-      .then(Api.toJSON);
+      url: `movies`
+    }).then(Api.toJSON);
   }
 
   getComment(id) {
     return this._load({
-        url: `comments/${id}`
-      })
-      .then(Api.toJSON);
+      url: `comments/${id}`
+    }).then(Api.toJSON);
   }
 
   addComment(filmId, comment) {
     return this._load({
-        url: `comments/${filmId}`,
-        method: Method.POST,
-        body: JSON.stringify(comment),
-        headers: new Headers({
-          "Content-Type": `application/json`
-        })
+      url: `comments/${filmId}`,
+      method: Method.POST,
+      body: JSON.stringify(comment),
+      headers: new Headers({
+        "Content-Type": `application/json`
       })
-      .then(Api.toJSON);
+    }).then(Api.toJSON);
   }
 
   deleteComment(id) {
@@ -52,14 +49,13 @@ export default class Api {
 
   updateFilm(film) {
     return this._load({
-        url: `movies/${film.id}`,
-        method: Method.PUT,
-        body: JSON.stringify(film),
-        headers: new Headers({
-          "Content-Type": `application/json`
-        })
+      url: `movies/${film.id}`,
+      method: Method.PUT,
+      body: JSON.stringify(film),
+      headers: new Headers({
+        "Content-Type": `application/json`
       })
-      .then(Api.toJSON);
+    }).then(Api.toJSON);
   }
 
   _load({
@@ -70,15 +66,11 @@ export default class Api {
   }) {
     headers.append(`Authorization`, this._authorization);
 
-    return fetch(
-        `${this._endPoint}/${url}`, {
-          method,
-          body,
-          headers
-        }
-      )
-      .then(Api.checkStatus)
-      .catch(Api.catchError);
+    return fetch(`${this._endPoint}/${url}`, {
+      method,
+      body,
+      headers
+    }).then(Api.checkStatus).catch(Api.catchError);
   }
 
   static checkStatus(response) {

@@ -6,9 +6,6 @@ import UserProfileView from "../view/user-profile.js";
 import LoadMoreView from "../view/load-more.js";
 import SortView from "../view/sort.js";
 
-import TopRatedView from "../view/top-rated.js";
-import MostCommentedView from "../view/most-commented.js";
-
 import NoFilmsView from "../view/no-films.js";
 import LoadingView from "../view/loading.js";
 
@@ -70,13 +67,6 @@ export default class MovieList {
     this._filmsContainerComponent = new FilmsContainer();
     this._noFilmsComponent = new NoFilmsView();
     this._loadingComponent = new LoadingView();
-
-
-    this._topRatedFilmsComponent = new TopRatedView();
-    this._topRatedFilmsContainer = new FilmsContainer();
-
-    this._mostCommentedFilmsComponent = new MostCommentedView();
-    this._mostCommentedFilmsContainer = new FilmsContainer();
 
     this._handleViewAction = this._handleViewAction.bind(this);
     this._handleModelEvent = this._handleModelEvent.bind(this);
@@ -258,18 +248,6 @@ export default class MovieList {
     }
   }
 
-  _renderTopRatedFilmsList() {
-    render(this._filmsSectionComponent, this._topRatedFilmsComponent, RenderPosition.BEFOREEND);
-
-    render(this._topRatedFilmsComponent, this._topRatedFilmsContainer, RenderPosition.BEFOREEND);
-  }
-
-  _renderMostCommentedFilmsList() {
-    render(this._filmsSectionComponent, this._mostCommentedFilmsComponent, RenderPosition.BEFOREEND);
-
-    render(this._mostCommentedFilmsComponent, this._mostCommentedFilmsContainer, RenderPosition.BEFOREEND);
-  }
-
   _renderUserProfile() {
     const prevUserProfile = this._userProfile;
 
@@ -302,8 +280,6 @@ export default class MovieList {
     this._renderUserProfile();
     this._renderSort();
     this._renderMainFilmsList();
-    this._renderTopRatedFilmsList();
-    this._renderMostCommentedFilmsList();
   }
 
   _clearList({

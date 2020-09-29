@@ -14,9 +14,6 @@ export const sortByRating = (filmA, filmB) => {
   return filmB.film_info.total_rating - filmA.film_info.total_rating;
 };
 
-export const sortByComments = (filmA, filmB) => {
-  return filmB.comments.length - filmA.comments.length;
-};
 
 export const commentDate = (dueDate) => {
   return moment(dueDate).format(`YYYY/MM/DD hh:mm`);
@@ -29,7 +26,6 @@ export const getFilmDuration = (runtime) => {
     });
 };
 
-// для вывода Total duration в СТАТИСТИКЕ фильмов
 export const totalFilmsDuration = (runtime) => {
 
   const timeObj = moment.duration(Number(runtime), `minutes`);
@@ -38,11 +34,6 @@ export const totalFilmsDuration = (runtime) => {
   const minutes = timeObj.minutes();
 
   return `${hours}<span class="statistic__item-description">h</span> ${minutes}<span class="statistic__item-description">m</span>`;
-
-  // return moment.duration(Number(runtime), `minutes`)
-  //   .format(`h[<span class="statistic__item-description">h</span>] m[<span class="statistic__item-description">m</span>]`, {
-  //     trim: `both mid`
-  //   });
 };
 
 export const getFilmsByDateToday = (date) => {

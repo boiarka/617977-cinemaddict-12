@@ -25,7 +25,7 @@ const getObjCountGenres = (films) => {
   const objGenres = {};
 
   for (let i = 0; i < watchedFilmGenres.length; i++) {
-    let item = watchedFilmGenres[i];
+    const item = watchedFilmGenres[i];
     objGenres[item] = objGenres[item] ? objGenres[item] + 1 : 1;
   }
 

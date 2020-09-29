@@ -87,7 +87,7 @@ const filmPopupTemplate = (film, comments) => {
   }
   const commentsCount = comments.length;
 
-  let addCommentsTemplate = createAddCommentTemplate();
+  const addCommentsTemplate = createAddCommentTemplate();
 
   return `<section class="film-details">
   <form class="film-details__inner" action="" method="get">

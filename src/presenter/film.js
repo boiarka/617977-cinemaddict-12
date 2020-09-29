@@ -163,6 +163,8 @@ export default class Film {
         evt.preventDefault();
         if (this._comments.length > 0) {
 
+          comment.disabled = true;
+          comment.textContent = `Deleting...`;
           const commentId = evt.target.dataset.commentId;
           this._api.deleteComment(commentId).then(() => {
             this._changeData(UserAction.UPDATE_FILM, UpdateType.PATCH, this._film);
@@ -219,15 +221,6 @@ export default class Film {
     this._film.user_details.watchlist = !this._film.user_details.watchlist;
     this._changeData(UserAction.UPDATE_FILM, UpdateType.MINOR, this._film);
   }
-
-  // Вот было:
-  //
-  // _handleWatchListClick() {
-  //   this._changeData(UserAction.UPDATE_FILM, UpdateType.MINOR, Object.assign({}, this._film, {
-  //     isWatchlist: !this._film.isWatchlist
-  //   }));
-  // }
-
 
   _handleWatchedClick() {
     this._film.user_details[`already_watched`] = !this._film.user_details.already_watched;

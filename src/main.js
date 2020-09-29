@@ -16,11 +16,6 @@ import {
 import Api from "./api.js";
 
 import {
-  generateFilms,
-  generateComments
-} from "./mock/film.js";
-
-import {
   render,
   RenderPosition,
   remove
@@ -30,20 +25,10 @@ const FILM_COUNT = 20;
 const AUTHORIZATION = `Basic hSsafsaf238udshaa2j`;
 const END_POINT = `https://12.ecmascript.pages.academy/cinemaddict`;
 
-// const films = new Array(FILM_COUNT).fill().map(generateFilms);
-// const comments = [];
+
 const api = new Api(END_POINT, AUTHORIZATION);
-
-
-// films.forEach((film) => {
-//   comments.push(...generateComments(film.id));
-// });
-
 const filmsModel = new FilmsModel();
-
-
 const commentsModel = new CommentsModel();
-// commentsModel.setComments(comments);
 
 const filterModel = new FilterModel();
 
