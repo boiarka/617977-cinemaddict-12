@@ -5,6 +5,7 @@ import {
 
 const createCommentTemplate = (commentObj) => {
   const {
+    id,
     author,
     date,
     comment,
@@ -21,7 +22,7 @@ const createCommentTemplate = (commentObj) => {
       <p class="film-details__comment-info">
         <span class="film-details__comment-author">${author}</span>
         <span class="film-details__comment-day">${commentDate(date)}</span>
-        <button class="film-details__comment-delete">Delete</button>
+        <button class="film-details__comment-delete" data-comment-id="${id}">Delete</button>
       </p>
     </div>
   </li>`

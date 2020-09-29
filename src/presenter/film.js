@@ -54,26 +54,32 @@ export default class Film {
 
   init(film) {
     this._film = film;
-    this._api.getComment(this._film.id).then((comments) => {
-      this._comments = comments;
-    });
 
-    const prevFilmComponent = this._filmComponent;
+    this._api.getComment(this._film.id)
+      .then((comments) => {
+        this._comments = comments;
 
-    this._filmComponent = new FilmCardView(this._film, this._comments);
-    this._setFilmHandlers();
+        const prevFilmComponent = this._filmComponent;
 
-    if (prevFilmComponent === null) {
-      render(this._mainSection, this._filmComponent, RenderPosition.BEFOREEND);
-      return;
-    }
+        this._filmComponent = new FilmCardView(this._film, this._comments);
 
-    if (this._filmPopupComponent) {
-      this._updatePopup();
-    }
 
-    replace(this._filmComponent, prevFilmComponent);
-    remove(prevFilmComponent);
+        this._setFilmHandlers();
+
+        if (prevFilmComponent === null) {
+          render(this._mainSection, this._filmComponent, RenderPosition.BEFOREEND);
+          return;
+        }
+
+        if (this._filmPopupComponent) {
+          this._updatePopup();
+        }
+
+        replace(this._filmComponent, prevFilmComponent);
+        remove(prevFilmComponent);
+      });
+
+
   }
 
   destroy() {
@@ -152,14 +158,16 @@ export default class Film {
 
   _handleDeleteComment() {
     const commentDeleteButtons = this._filmPopupComponent.getElement().querySelectorAll(`.film-details__comment-delete`);
-    commentDeleteButtons.forEach((comment, index) => {
+    commentDeleteButtons.forEach((comment) => {
       comment.addEventListener(`click`, (evt) => {
         evt.preventDefault();
         if (this._comments.length > 0) {
 
-          const commentId = this._comments[index].id;
-          this._commentsModel.deleteComment(commentId);
-          this._changeData(UserAction.UPDATE_FILM, UpdateType.MINOR, this._film);
+          const commentId = evt.target.dataset.commentId;
+          this._api.deleteComment(commentId).then(() => {
+            this._changeData(UserAction.UPDATE_FILM, UpdateType.PATCH, this._film);
+          });
+
         }
       });
     });
@@ -177,16 +185,16 @@ export default class Film {
       return;
     }
 
-    this._commentsModel.addComment({
-      id: Date.now() + parseInt(Math.random() * 10000, 10),
-      filmId: this._film.id,
-      name: `NEWNAME`,
-      date: new Date(),
-      text: he.encode(commentText.value),
-      emoji: commentEmoji.dataset.emojiName
+    const comment = {
+      "comment": he.encode(commentText.value),
+      "date": moment(new Date()).format(),
+      "emotion": commentEmoji.dataset.emojiName
+    };
+
+    this._api.addComment(this._film.id, comment).then(() => {
+      this._changeData(UserAction.UPDATE_FILM, UpdateType.MINOR, this._film);
     });
 
-    this._changeData(UserAction.UPDATE_FILM, UpdateType.MINOR, this._film);
     this._handleDeleteComment();
   }
 

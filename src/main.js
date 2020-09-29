@@ -1,4 +1,3 @@
-import UserProfileView from "./view/user-profile.js";
 import FilmsStatView from "./view/films-stat.js";
 import SiteMenuView from "./view/site-nav.js";
 import Statistic from "./view/statistic.js";
@@ -55,10 +54,8 @@ const bodyElement = document.querySelector(`body`);
 const menuComponent = new SiteMenuView();
 render(mainElement, menuComponent, RenderPosition.AFTERBEGIN);
 
-const filmSectionPresenter = new MovieListPresenter(mainElement, bodyElement, filmsModel, filterModel, commentsModel, api);
+const filmSectionPresenter = new MovieListPresenter(mainElement, bodyElement, filmsModel, filterModel, commentsModel, api, headerElement);
 const filterPresenter = new FilterPresenter(menuComponent.getElement(), filterModel, filmsModel);
-
-render(headerElement, new UserProfileView(), RenderPosition.BEFOREEND);
 
 filterPresenter.init();
 filmSectionPresenter.init();
@@ -73,7 +70,7 @@ api.getFilms()
     filmsModel.setFilms(UpdateType.INIT, []);
   });
 
-const statisticComponent = new Statistic();
+const statisticComponent = new Statistic(mainElement);
 
 const openStat = () => {
   filmSectionPresenter.destroy();

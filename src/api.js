@@ -1,6 +1,8 @@
 const Method = {
   GET: `GET`,
-  PUT: `PUT`
+  PUT: `PUT`,
+  POST: `POST`,
+  DELETE: `DELETE`
 };
 
 const SuccessHTTPStatusRange = {
@@ -27,6 +29,25 @@ export default class Api {
         url: `comments/${id}`
       })
       .then(Api.toJSON);
+  }
+
+  addComment(filmId, comment) {
+    return this._load({
+        url: `comments/${filmId}`,
+        method: Method.POST,
+        body: JSON.stringify(comment),
+        headers: new Headers({
+          "Content-Type": `application/json`
+        })
+      })
+      .then(Api.toJSON);
+  }
+
+  deleteComment(id) {
+    return this._load({
+      url: `comments/${id}`,
+      method: Method.DELETE
+    });
   }
 
   updateFilm(film) {
