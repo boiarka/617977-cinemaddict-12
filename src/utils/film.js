@@ -31,8 +31,10 @@ export const getFilmDuration = (runtime) => {
 
 // для вывода Total duration в СТАТИСТИКЕ фильмов
 export const totalFilmsDuration = (runtime) => {
+
   const timeObj = moment.duration(Number(runtime), `minutes`);
-  const hours = timeObj.hours();
+
+  const hours = Math.trunc(timeObj.asHours());
   const minutes = timeObj.minutes();
 
   return `${hours}<span class="statistic__item-description">h</span> ${minutes}<span class="statistic__item-description">m</span>`;
@@ -41,4 +43,35 @@ export const totalFilmsDuration = (runtime) => {
   //   .format(`h[<span class="statistic__item-description">h</span>] m[<span class="statistic__item-description">m</span>]`, {
   //     trim: `both mid`
   //   });
+};
+
+export const getFilmsByDateToday = (date) => {
+  const dateToday = moment(new Date()).format();
+  return moment(date).isSame(dateToday, `day`);
+};
+
+export const getFilmsByDateFromTo = (date, days) => {
+  const dateToday = moment(new Date()).format();
+  const sampleDaysAgo = moment().subtract(days, `days`);
+
+  return moment(date).isBetween(sampleDaysAgo, dateToday);
+};
+
+export const statusName = (count) => {
+  if (count === 0) {
+    return ``;
+  }
+  if (count >= 1 && count <= 10) {
+    return `Novice`;
+  }
+
+  if (count >= 11 && count <= 20) {
+    return `Fan`;
+  }
+
+  if (count >= 21) {
+    return `Movie buff`;
+  }
+
+  return ``;
 };

@@ -3,7 +3,10 @@ import Chart from "chart.js";
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 
 import {
-  totalFilmsDuration
+  totalFilmsDuration,
+  getFilmsByDateToday,
+  getFilmsByDateFromTo,
+  statusName
 } from "../utils/film.js";
 
 const BAR_HEIGHT = 50;
@@ -107,7 +110,7 @@ const createStatisticTemplate = (films, topGenre) => {
   <p class="statistic__rank">
     Your rank
     <img class="statistic__img" src="images/bitmap@2x.png" alt="Avatar" width="35" height="35">
-    <span class="statistic__rank-label">Sci-Fighter</span>
+    <span class="statistic__rank-label">${statusName(watchedFilms.length)}</span>
   </p>
 
   <form action="https://echo.htmlacademy.ru/" method="get" class="statistic__filters">
@@ -132,15 +135,15 @@ const createStatisticTemplate = (films, topGenre) => {
   <ul class="statistic__text-list">
     <li class="statistic__text-item">
       <h4 class="statistic__item-title">You watched</h4>
-      <p class="statistic__item-text">${watchedFilmsCount} <span class="statistic__item-description">movies</span></p>
+      <p class="statistic__item-text"><span id="statFilmCount">${watchedFilmsCount}</span> <span class="statistic__item-description">movies</span></p>
     </li>
     <li class="statistic__text-item">
       <h4 class="statistic__item-title">Total duration</h4>
-      <p class="statistic__item-text">${totalDuration}</p>
+      <p class="statistic__item-text" id="statFilmDuration">${totalDuration}</p>
     </li>
     <li class="statistic__text-item">
       <h4 class="statistic__item-title">Top genre</h4>
-      <p class="statistic__item-text">${topGenre}</p>
+      <p class="statistic__item-text" id="statFilmTopGenre">${topGenre}</p>
     </li>
   </ul>
 
@@ -152,10 +155,14 @@ const createStatisticTemplate = (films, topGenre) => {
 };
 
 export default class Statistic extends AbstractView {
-  constructor(films) {
+  constructor(mainElement) {
     super();
 
-    this._films = films;
+    this._mainElement = mainElement;
+    this._films = null;
+    this._watchedFilms = null;
+
+    this._statChangeHandler = this._statChangeHandler.bind(this);
   }
 
   setFilms(films) {
@@ -166,8 +173,12 @@ export default class Statistic extends AbstractView {
     return createStatisticTemplate(this._films, this._getTopGenre());
   }
 
-  renderChart() {
-    const watchedFilms = this._getWatchedFilms();
+  renderChart(films) {
+    let watchedFilms = this._getWatchedFilms();
+
+    if (films) {
+      watchedFilms = films;
+    }
 
     const objGenres = getObjCountGenres(watchedFilms);
 
@@ -185,12 +196,17 @@ export default class Statistic extends AbstractView {
   }
 
   _getWatchedFilms() {
-    return getWatchedFilms(this._films);
+    this._watchedFilms = getWatchedFilms(this._films);
+
+    return this._watchedFilms;
   }
 
-  _getTopGenre() {
-    const watchedFilms = this._getWatchedFilms();
+  _getTopGenre(films) {
+    let watchedFilms = this._getWatchedFilms();
 
+    if (films) {
+      watchedFilms = films;
+    }
 
     const objGenres = getObjCountGenres(watchedFilms);
     const topGenre = Object.keys(objGenres).sort(function (a, b) {
@@ -205,12 +221,73 @@ export default class Statistic extends AbstractView {
     this._filmChart = renderChart(statisticCtx, genres, countGenres);
   }
 
+  _getTodayFilms(watchedFilms) {
+    const filmsByDate = watchedFilms.filter((film) => {
+      return getFilmsByDateToday(film.user_details.watching_date);
+    });
+    return filmsByDate;
+  }
+
+  _getFilmsByDate(watchedFilms, days) {
+    const filmsByDate = watchedFilms.filter((film) => {
+      return getFilmsByDateFromTo(film.user_details.watching_date, days);
+    });
+    return filmsByDate;
+  }
+
   _statChangeHandler(evt) {
+
+    const statFilterName = {
+      ALL: `statistic-all-time`,
+      TODAY: `statistic-today`,
+      WEEK: `statistic-week`,
+      MONTH: `statistic-month`,
+      YEAR: `statistic-year`,
+    };
+
     if (evt.target.tagName !== `LABEL`) {
       return;
     }
 
+    if (statFilterName.ALL === evt.target.htmlFor) {
+      this._rerenderStatsInfo(this._getWatchedFilms());
+    }
+
+    if (statFilterName.TODAY === evt.target.htmlFor) {
+      const films = this._getTodayFilms(this._watchedFilms);
+      this._rerenderStatsInfo(films);
+    }
+
+    if (statFilterName.WEEK === evt.target.htmlFor) {
+      const films = this._getFilmsByDate(this._watchedFilms, 7);
+      this._rerenderStatsInfo(films);
+    }
+
+    if (statFilterName.MONTH === evt.target.htmlFor) {
+      const films = this._getFilmsByDate(this._watchedFilms, 30);
+      this._rerenderStatsInfo(films);
+    }
+
+    if (statFilterName.YEAR === evt.target.htmlFor) {
+      const films = this._getFilmsByDate(this._watchedFilms, 360);
+      this._rerenderStatsInfo(films);
+    }
+
     evt.preventDefault();
+  }
+
+  _rerenderStatsInfo(films) {
+    const filmsDurations = [];
+    films.forEach((film) => {
+      filmsDurations.push(film.film_info.runtime);
+    });
+    const totalDuration = films.length > 0 ? totalFilmsDuration(filmsDurations.reduce((total, duration) => total + duration)) : 0;
+
+    this.getElement().querySelector(`#statFilmCount`).textContent = films.length;
+    this.getElement().querySelector(`#statFilmDuration`).innerHTML = totalDuration;
+    this.getElement().querySelector(`#statFilmTopGenre`).textContent = this._getTopGenre(films);
+
+    this.renderChart(films);
   }
 
   setStatChangeHandler() {

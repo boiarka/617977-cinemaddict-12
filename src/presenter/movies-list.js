@@ -1,6 +1,7 @@
 import FilmSectionWiew from "../view/films-section.js";
 import FilmsListWiew from "../view/films-list.js";
 import FilmsContainer from "../view/films-container.js";
+import UserProfileView from "../view/user-profile.js";
 
 import LoadMoreView from "../view/load-more.js";
 import SortView from "../view/sort.js";
@@ -18,6 +19,7 @@ const FILM_COUNT_PER_STEP = 5;
 
 import {
   render,
+  replace,
   remove,
   RenderPosition
 } from "../utils/render.js";
@@ -45,13 +47,14 @@ const FiltersName = {
 };
 
 export default class MovieList {
-  constructor(mainSection, bodyElement, filmsModel, filterModel, commentsModel, api) {
+  constructor(mainSection, bodyElement, filmsModel, filterModel, commentsModel, api, headerElement) {
     this._filmsModel = filmsModel;
     this._commentsModel = commentsModel;
     this._filterModel = filterModel;
 
     this._mainSection = mainSection;
     this._bodyElement = bodyElement;
+    this._headerElement = headerElement;
     this._renderedFilmCount = FILM_COUNT_PER_STEP;
     this._currentSortType = SortType.DEFAULT;
     this._filmPresenter = {};
@@ -60,12 +63,14 @@ export default class MovieList {
 
     this._sortComponent = null;
     this._loadMoreButtonComponent = null;
+    this._userProfile = null;
 
     this._filmsSectionComponent = new FilmSectionWiew();
     this._filmsListComponent = new FilmsListWiew();
     this._filmsContainerComponent = new FilmsContainer();
     this._noFilmsComponent = new NoFilmsView();
     this._loadingComponent = new LoadingView();
+
 
     this._topRatedFilmsComponent = new TopRatedView();
     this._topRatedFilmsContainer = new FilmsContainer();
@@ -145,6 +150,7 @@ export default class MovieList {
         });
         break;
     }
+    this._renderUserProfile();
   }
 
   _handleModelEvent(updateType, data) {
@@ -180,6 +186,7 @@ export default class MovieList {
         this._renderList();
         break;
     }
+
   }
 
   _renderSort() {
@@ -263,6 +270,22 @@ export default class MovieList {
     render(this._mostCommentedFilmsComponent, this._mostCommentedFilmsContainer, RenderPosition.BEFOREEND);
   }
 
+  _renderUserProfile() {
+    const prevUserProfile = this._userProfile;
+
+    const watchedFilmsCount = this._filmsModel.getFilms().filter((film) => film.user_details.already_watched).length;
+
+    this._userProfile = new UserProfileView(watchedFilmsCount);
+
+    if (prevUserProfile === null) {
+      render(this._headerElement, this._userProfile, RenderPosition.BEFOREEND);
+      return;
+    }
+
+    replace(this._userProfile, prevUserProfile);
+    remove(prevUserProfile);
+  }
+
   _renderList() {
     if (this._isLoading) {
       this._renderLoading();
@@ -276,6 +299,7 @@ export default class MovieList {
       return;
     }
 
+    this._renderUserProfile();
     this._renderSort();
     this._renderMainFilmsList();
     this._renderTopRatedFilmsList();
