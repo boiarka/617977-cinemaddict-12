@@ -1,6 +1,10 @@
 import moment from "moment";
 import momentDurationFormatSetup from "moment-duration-format";
 
+import {
+  UserRangs
+} from "../const";
+
 momentDurationFormatSetup(moment);
 
 export const sortByDate = (filmA, filmB) => {
@@ -11,7 +15,7 @@ export const sortByDate = (filmA, filmB) => {
 };
 
 export const sortByRating = (filmA, filmB) => {
-  return filmB.film_info.total_rating - filmA.film_info.total_rating;
+  return Math.round(filmB.film_info.total_rating) - Math.round(filmA.film_info.total_rating);
 };
 
 
@@ -53,15 +57,15 @@ export const statusName = (count) => {
     return ``;
   }
   if (count >= 1 && count <= 10) {
-    return `Novice`;
+    return UserRangs.NOVICE;
   }
 
   if (count >= 11 && count <= 20) {
-    return `Fan`;
+    return UserRangs.FAN;
   }
 
   if (count >= 21) {
-    return `Movie buff`;
+    return UserRangs.MOVIE_BUFF;
   }
 
   return ``;

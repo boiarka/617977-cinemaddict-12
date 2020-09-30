@@ -1,6 +1,6 @@
-import FilmsStatView from "./view/films-stat.js";
 import SiteMenuView from "./view/site-nav.js";
 import Statistic from "./view/statistic.js";
+import FilmsStatView from "./view/films-stat.js";
 
 import MovieListPresenter from "./presenter/movies-list.js";
 import FilterPresenter from "./presenter/filter.js";
@@ -21,7 +21,6 @@ import {
   remove
 } from "./utils/render.js";
 
-const FILM_COUNT = 20;
 const AUTHORIZATION = `Basic hSsafsaf238udshaa2j`;
 const END_POINT = `https://12.ecmascript.pages.academy/cinemaddict`;
 
@@ -41,16 +40,16 @@ render(mainElement, menuComponent, RenderPosition.AFTERBEGIN);
 
 const filmSectionPresenter = new MovieListPresenter(mainElement, bodyElement, filmsModel, filterModel, commentsModel, api, headerElement);
 const filterPresenter = new FilterPresenter(menuComponent.getElement(), filterModel, filmsModel);
+const footerStatisticContainer = document.querySelector(`.footer__statistics`);
+
 
 filterPresenter.init();
 filmSectionPresenter.init();
 
-const footerStatisticContainer = document.querySelector(`.footer__statistics`);
-render(footerStatisticContainer, new FilmsStatView(FILM_COUNT), `beforeend`);
-
 api.getFilms()
   .then((films) => {
     filmsModel.setFilms(UpdateType.INIT, films);
+    render(footerStatisticContainer, new FilmsStatView(films.length), `beforeend`);
   }).catch(() => {
     filmsModel.setFilms(UpdateType.INIT, []);
   });

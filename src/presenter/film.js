@@ -123,6 +123,8 @@ export default class Film {
     this._filmPopupComponent.setWatchedClickHandler(this._handleWatchedPopupClick);
     this._filmPopupComponent.setFavoritesClickHandler(this._handleFavoritesPopupClick);
 
+    this._filmPopupComponent.setPopupCloseClickHandler(this._handlePopupCloseClick);
+
     document.addEventListener(`keydown`, this._escKeyDownHandler);
     document.addEventListener(`keydown`, this._ctrEnterDownHandler);
 
@@ -193,6 +195,7 @@ export default class Film {
       "emotion": commentEmoji.dataset.emojiName
     };
 
+    commentText.disabled = true;
     this._api.addComment(this._film.id, comment).then(() => {
       this._changeData(UserAction.UPDATE_FILM, UpdateType.MINOR, this._film);
     });

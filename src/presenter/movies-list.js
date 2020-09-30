@@ -29,7 +29,7 @@ import {
 import {
   SortType,
   UpdateType,
-  UserAction
+  UserAction,
 } from "../const.js";
 
 import {
@@ -37,10 +37,10 @@ import {
 } from "../utils/filter.js";
 
 const FiltersName = {
-  all: `default`,
-  watchlist: `watchlist`,
-  history: `already_watched`,
-  favorites: `favorite`
+  ALL: `default`,
+  WATCHLIST: `watchlist`,
+  HISTORY: `already_watched`,
+  FAVORITES: `favorite`
 };
 
 export default class MovieList {
@@ -143,22 +143,22 @@ export default class MovieList {
     this._renderUserProfile();
   }
 
-  _handleModelEvent(updateType, data) {
+  _handleModelEvent(updateType, film) {
     const filterType = this._filterModel.getFilter();
     const filmFilteredType = FiltersName[filterType];
 
     switch (updateType) {
       case UpdateType.PATCH:
-        this._filmPresenter[data.id].init(data);
+        this._filmPresenter[film.id].init(film);
         break;
       case UpdateType.MINOR:
-        this._filmPresenter[data.id].init(data);
+        this._filmPresenter[film.id].init(film);
 
-        if (FiltersName.all === filmFilteredType) {
+        if (FiltersName.ALL === filmFilteredType) {
           return;
         }
 
-        if (data.user_details[filmFilteredType] === false) {
+        if (film.user_details[filmFilteredType] === false) {
           this._clearList();
           this._renderList();
         }
@@ -270,9 +270,9 @@ export default class MovieList {
       return;
     }
 
-    const taskCount = this._getFilms().length;
+    const filmsCount = this._getFilms().length;
 
-    if (taskCount === 0) {
+    if (filmsCount === 0) {
       this._renderNoFilms();
       return;
     }

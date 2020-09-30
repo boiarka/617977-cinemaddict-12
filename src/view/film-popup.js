@@ -1,7 +1,12 @@
+import moment from "moment";
+
 import SmartView from "./smart.js";
+
 import {
-  commentDate
+  commentDate,
+  getFilmDuration
 } from "../utils/film.js";
+
 
 const createCommentTemplate = (commentObj) => {
   const {
@@ -9,7 +14,7 @@ const createCommentTemplate = (commentObj) => {
     author,
     date,
     comment,
-    emotion
+    emotion,
   } = commentObj;
 
   return (
@@ -64,22 +69,37 @@ const createAddCommentTemplate = () => {
 
 
 const filmPopupTemplate = (film, comments) => {
-
-  const isWatchlist = film.user_details.watchlist;
-  const isWatched = film.user_details.already_watched;
-  const isFavorites = film.user_details.favorite;
-  const totalRating = film.film_info.total_rating;
-  const alternativeTitle = film.film_info.alternative_title;
-
   const {
     film_info: {
       title,
       poster,
       description,
       director,
-
+      writers,
+      actors,
+      runtime,
+      genre,
+      release: {
+        date,
+      }
     },
   } = film;
+
+  const isWatchlist = film.user_details.watchlist;
+  const isWatched = film.user_details.already_watched;
+  const isFavorites = film.user_details.favorite;
+  const totalRating = film.film_info.total_rating;
+  const alternativeTitle = film.film_info.alternative_title;
+  const ageRating = film.film_info.age_rating;
+  const releaseCountry = film.film_info.release.release_country;
+  const filmDuration = getFilmDuration(runtime);
+  const filmDate = moment(date).format(`MMM Do YYYY`);
+
+  let filmGenres = ``;
+  genre.forEach((oneGenre) => {
+    filmGenres += `<span class="film-details__genre">${oneGenre}</span>`;
+  });
+
 
   let commentsTemplate = ``;
   for (let i = 0; i < comments.length; i++) {
@@ -99,7 +119,7 @@ const filmPopupTemplate = (film, comments) => {
         <div class="film-details__poster">
           <img class="film-details__poster-img" src="${poster}" alt="">
 
-          <p class="film-details__age">18+</p>
+          <p class="film-details__age">${ageRating}+</p>
         </div>
 
         <div class="film-details__info">
@@ -121,30 +141,27 @@ const filmPopupTemplate = (film, comments) => {
             </tr>
             <tr class="film-details__row">
               <td class="film-details__term">Writers</td>
-              <td class="film-details__cell">Anne Wigton, Heinz Herald, Richard Weil</td>
+              <td class="film-details__cell">${writers.join(`, `)}</td>
             </tr>
             <tr class="film-details__row">
               <td class="film-details__term">Actors</td>
-              <td class="film-details__cell">Erich von Stroheim, Mary Beth Hughes, Dan Duryea</td>
+              <td class="film-details__cell">${actors.join(`, `)}</td>
             </tr>
             <tr class="film-details__row">
               <td class="film-details__term">Release Date</td>
-              <td class="film-details__cell">30 March 1945</td>
+              <td class="film-details__cell">${filmDate}</td>
             </tr>
             <tr class="film-details__row">
               <td class="film-details__term">Runtime</td>
-              <td class="film-details__cell">1h 18m</td>
+              <td class="film-details__cell">${filmDuration}</td>
             </tr>
             <tr class="film-details__row">
               <td class="film-details__term">Country</td>
-              <td class="film-details__cell">USA</td>
+              <td class="film-details__cell">${releaseCountry}</td>
             </tr>
             <tr class="film-details__row">
-              <td class="film-details__term">Genres</td>
-              <td class="film-details__cell">
-                <span class="film-details__genre">Drama</span>
-                <span class="film-details__genre">Film-Noir</span>
-                <span class="film-details__genre">Mystery</span></td>
+              <td class="film-details__term">Genre${genre.length === 1 ? `` : `s`}</td>
+              <td class="film-details__cell">${filmGenres}</td>
             </tr>
           </table>
 

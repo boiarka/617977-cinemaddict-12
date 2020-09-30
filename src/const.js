@@ -15,8 +15,14 @@ export const UpdateType = {
 };
 
 export const FilterType = {
-  ALL: `all`,
-  WATCHLIST: `watchlist`,
-  HISTORY: `history`,
-  FAVORITES: `favorites`
+  ALL: `ALL`,
+  WATCHLIST: `WATCHLIST`,
+  HISTORY: `HISTORY`,
+  FAVORITES: `FAVORITES`
+};
+
+export const UserRangs = {
+  NOVICE: `Novice`,
+  FAN: `Fan`,
+  MOVIE_BUFF: `Movie buff`,
 };

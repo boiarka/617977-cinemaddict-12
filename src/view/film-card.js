@@ -32,6 +32,7 @@ const filmCardTemplate = (film = {}) => {
   const filmDate = moment(date).year();
   const filmDuration = getFilmDuration(runtime);
 
+  const filmDescription = description.length > 140 ? description.slice(0, 139) + `...` : description;
 
   return (
     `<article class="film-card">
@@ -43,7 +44,7 @@ const filmCardTemplate = (film = {}) => {
             <span class="film-card__genre">Musical</span>
           </p>
           <img src="${poster}" alt="" class="film-card__poster">
-          <p class="film-card__description">${description}</p>
+          <p class="film-card__description">${filmDescription}</p>
           <a class="film-card__comments">${comments.length} comments</a>
           <form class="film-card__controls">
             <button class="film-card__controls-item button film-card__controls-item--add-to-watchlist${isWatchlist ? ` film-card__controls-item--active` : ``}">Add to watchlist</button>
