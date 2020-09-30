@@ -11,11 +11,11 @@ export const sortByDate = (filmA, filmB) => {
   const filmADate = moment(filmA.film_info.release.date).year();
   const filmBDate = moment(filmB.film_info.release.date).year();
 
-  return filmBDate - filmADate;
+  return filmBDate - filmADate > 0 ? 1 : -1;
 };
 
 export const sortByRating = (filmA, filmB) => {
-  return Math.round(filmB.film_info.total_rating) - Math.round(filmA.film_info.total_rating);
+  return filmB.film_info.total_rating - filmA.film_info.total_rating > 0 ? 1 : -1;
 };
 
 

@@ -55,29 +55,23 @@ export default class Film {
   init(film) {
     this._film = film;
 
-    this._api.getComment(this._film.id)
-      .then((comments) => {
-        this._comments = comments;
+    const prevFilmComponent = this._filmComponent;
 
-        const prevFilmComponent = this._filmComponent;
+    this._filmComponent = new FilmCardView(this._film);
 
-        this._filmComponent = new FilmCardView(this._film, this._comments);
+    this._setFilmHandlers();
 
+    if (prevFilmComponent === null) {
+      render(this._mainSection, this._filmComponent, RenderPosition.BEFOREEND);
+      return;
+    }
 
-        this._setFilmHandlers();
+    if (this._filmPopupComponent) {
+      this._updatePopup();
+    }
 
-        if (prevFilmComponent === null) {
-          render(this._mainSection, this._filmComponent, RenderPosition.BEFOREEND);
-          return;
-        }
-
-        if (this._filmPopupComponent) {
-          this._updatePopup();
-        }
-
-        replace(this._filmComponent, prevFilmComponent);
-        remove(prevFilmComponent);
-      });
+    replace(this._filmComponent, prevFilmComponent);
+    remove(prevFilmComponent);
 
 
   }
@@ -115,22 +109,28 @@ export default class Film {
   }
 
   _openPopup() {
-    this._filmPopupComponent = new FilmPopupView(this._film, this._comments);
-    render(this._popupSection, this._filmPopupComponent, RenderPosition.BEFOREEND);
+    this._api.getComment(this._film.id)
+      .then((comments) => {
+        this._comments = comments;
 
-    this._filmPopupComponent.setPopupCloseClickHandler(this._handlePopupCloseClick);
-    this._filmPopupComponent.setWatchListClickHandler(this._handleWatchListPopupClick);
-    this._filmPopupComponent.setWatchedClickHandler(this._handleWatchedPopupClick);
-    this._filmPopupComponent.setFavoritesClickHandler(this._handleFavoritesPopupClick);
+        this._filmPopupComponent = new FilmPopupView(this._film, this._comments);
+        render(this._popupSection, this._filmPopupComponent, RenderPosition.BEFOREEND);
 
-    this._filmPopupComponent.setPopupCloseClickHandler(this._handlePopupCloseClick);
+        this._filmPopupComponent.setPopupCloseClickHandler(this._handlePopupCloseClick);
+        this._filmPopupComponent.setWatchListClickHandler(this._handleWatchListPopupClick);
+        this._filmPopupComponent.setWatchedClickHandler(this._handleWatchedPopupClick);
+        this._filmPopupComponent.setFavoritesClickHandler(this._handleFavoritesPopupClick);
 
-    document.addEventListener(`keydown`, this._escKeyDownHandler);
-    document.addEventListener(`keydown`, this._ctrEnterDownHandler);
+        this._filmPopupComponent.setPopupCloseClickHandler(this._handlePopupCloseClick);
 
-    this._handleDeleteComment();
-    this._changeMode();
-    this._mode = Mode.POPUP;
+        document.addEventListener(`keydown`, this._escKeyDownHandler);
+        document.addEventListener(`keydown`, this._ctrEnterDownHandler);
+
+        this._handleDeleteComment();
+        this._changeMode();
+        this._mode = Mode.POPUP;
+      });
+
   }
 
   _closePopup() {

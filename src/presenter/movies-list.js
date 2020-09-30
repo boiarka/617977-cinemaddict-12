@@ -112,7 +112,6 @@ export default class MovieList {
         return filteredFilms.sort(sortByRating);
     }
 
-
     return filteredFilms;
   }
 
@@ -203,7 +202,9 @@ export default class MovieList {
   }
 
   _renderFilms(films) {
-    films.forEach((film) => this._renderFilm(film));
+    films.forEach((film) => {
+      this._renderFilm(film);
+    });
   }
 
   _renderLoading() {

@@ -54,6 +54,7 @@ api.getFilms()
     filmsModel.setFilms(UpdateType.INIT, []);
   });
 
+
 const statisticComponent = new Statistic(mainElement);
 
 const openStat = () => {
